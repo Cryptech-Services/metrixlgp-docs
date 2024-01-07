@@ -1,0 +1,82 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #432d57;
+  --ifm-color-primary-dark: #362446;
+  --ifm-color-primary-darker: #281b35;
+  --ifm-color-primary-darkest: #120c18;
+  --ifm-color-primary-light: #81628e;
+  --ifm-color-primary-lighter: #bf96c6;
+  --ifm-color-primary-lightest: #fdcbfd;
+  --ifm-code-font-size: 95%;
+}
+
+.alert--info {
+  --ifm-alert-background-color: var(--ifm-color-primary-dark);
+  --ifm-alert-background-color-highlight: var(--ifm-color-primary-lighter);
+  --ifm-alert-foreground-color: var(--ifm-color-primary-lightest);
+  --ifm-alert-border-color: var(--ifm-color-primary-lightest);
+}
+.table-of-contents__link {
+  padding-left: 12px;
+  border-radius: 3px;
+}
+
+.table-of-contents__link:hover,
+.table-of-contents__link:hover code {
+  color: var(--ifm-color-primary-darkest);
+  background-color: var(--ifm-color-primary-light);
+}
+.table-of-contents__link--active,
+.table-of-contents__link--active code {
+  color: #ffd36b;
+  background-color: var(--ifm-color-primary-dark);
+}
+.footer--dark {
+  --ifm-footer-background-color: var(--ifm-color-primary-darkest);
+}
+
+html[data-theme='dark'] {
+  --ifm-background-color: var(--ifm-color-primary);
+  --ifm-background-surface-color: var(--ifm-color-primary-darkest);
+  --ifm-breadcrumb-color-active: var(--ifm-color-primary-lightest);
+  --ifm-link-color: var(--ifm-color-primary-lighter);
+}
+
+p {
+  color: whitesmoke;
+}
+
+.hero__title {
+  color: whitesmoke;
+}
+
+.button {
+  background-color: #ffd36b;
+  border-color: var(--ifm-color-primary-darkest);
+}
+
+.card {
+  background-color: var(--ifm-color-primary-dark);
+}
+
+.navbar__link--active {
+  color: #ffd36b;
+}
+
+.menu__link--active {
+  color: #ffd36b !important;
+}
+
+.pagination-nav__link {
+  background-color: var(--ifm-color-primary-dark);
+}
+
+.menu {
+  background-color: var(--ifm-color-primary-darker);
+}
