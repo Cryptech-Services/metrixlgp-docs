@@ -30,7 +30,7 @@ This reward comes in the form of <Highlight color="#bf96c6">**wMRX**</Highlight>
 
 ## Governing
 
-Rights for both creation of and voting on both Budget and DGP proposals are maintained by the <Highlight color="#bf96c6">**g**</Highlight> token holder.
+Rights for creation of and voting on both Budget and DGP proposals are maintained by the <Highlight color="#bf96c6">**g**</Highlight> token holder.
 
 ## Royalties
 

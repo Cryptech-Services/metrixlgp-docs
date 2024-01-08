@@ -22,15 +22,17 @@ export const Image = ({src}) => (
 
 <Highlight color="#bf96c6">**gMRX**</Highlight> is minted and issued to the minter of a <Highlight color="#bf96c6">**Gov**</Highlight> token.
 
+Flash loans can be utilized to mint gMRX so long as the loan and the fee are paid back in the same transacion. Any gMRX generated through a flash loan is burned after repaid.
+
 ## Burning
 
-<Highlight color="#bf96c6">**gMRX**</Highlight> can be redeemed and is burned in exchange for <Highlight color="#bf96c6">**MRX**</Highlight>.
+<Highlight color="#bf96c6">**gMRX**</Highlight> can be redeemed and is burned in exchange for <Highlight color="#bf96c6">**MRX**</Highlight>. The rate of this redemption is calculated based on the amount of <Highlight color="#bf96c6">**gMRX**</Highlight> and <Highlight color="#bf96c6">**MRX**</Highlight> liquidity available in the liquidity pool.
 
-`amountMRX = (burnAmount * ((poolMRX * 1e8) / poolGMRX)) / 1e8`
+`amountMRX = (burnAmount * ((poolMRX * 10⁸) / poolGMRX)) / 10⁸`
 
 ## Providing Liquidity
 
-A built in <Highlight color="#bf96c6">**wMRX**</Highlight>/<Highlight color="#bf96c6">**gMRX**</Highlight> liquidity pool is provided. All trading fees and 80% of the AutoGovernor rewards are injected into the pool, increasing the amount of <Highlight color="#bf96c6">**wMRX**</Highlight> and <Highlight color="#bf96c6">**gMRX**</Highlight> that the <Highlight color="#bf96c6">**LGP-LP**</Highlight> can be redeemed for.
+A built in <Highlight color="#bf96c6">**wMRX**</Highlight>/<Highlight color="#bf96c6">**gMRX**</Highlight> liquidity pool is provided. All trading fees and 80% of the AutoGovernor rewards are injected into the pool, increasing the amount of <Highlight color="#bf96c6">**wMRX**</Highlight> and <Highlight color="#bf96c6">**gMRX**</Highlight> that the <Highlight color="#bf96c6">**LGP-LP**</Highlight> can be redeemed for. Should the adding of liquidity exceed a 1% slippage threshold, it will be treated as a trand and a 0.3% trading fee will be incurred.
 
 ## Trading
 
