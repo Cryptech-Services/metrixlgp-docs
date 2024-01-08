@@ -10,7 +10,11 @@ style={{color}}>
 </span>
 );
 
-# g - Gov
+export const Image = ({src}) => (
+<img src='/img/logo-g-white.png' style={{width: '48px',height : '48px'}} />
+);
+
+# <Image  /> g - Gov
 
 <Highlight color="#bf96c6">**Gov**</Highlight> token entitles it's holder to govern and a 20% royalty.
 

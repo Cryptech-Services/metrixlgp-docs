@@ -10,7 +10,11 @@ style={{color}}>
 </span>
 );
 
-# wMRX - Wrapped Metrix
+export const Image = ({src}) => (
+<img src='/img/logo-wmrx-white.png' style={{width: '48px',height : '48px'}} />
+);
+
+# <Image  /> wMRX - Wrapped Metrix
 
 <Highlight color="#bf96c6">**Wrapped Metrix**</Highlight> is an MRC20 copatible wrapped version of Metrix.
 

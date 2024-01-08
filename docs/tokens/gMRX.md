@@ -10,7 +10,11 @@ style={{color}}>
 </span>
 );
 
-# gMRX - Liquid Governor Metrix
+export const Image = ({src}) => (
+<img src='/img/logo-gmrx-white.png' style={{width: '48px',height : '48px'}} />
+);
+
+# <Image  /> gMRX - Liquid Governor Metrix
 
 <Highlight color="#bf96c6">**Liquid Governor Metrix**</Highlight> allows illiquid DGP collateral to become liquid.
 
