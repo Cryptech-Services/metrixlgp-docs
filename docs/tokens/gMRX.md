@@ -52,7 +52,7 @@ If the pool is empty, the rate is based on the square root of the product.
 
 $\large\text{amountLP} = \sqrt{\text{newBalanceMRX} \times \text{newBalanceGMRX}}$
 
-If the pool is not empty, the rate is based on the <Highlight color="#bf96c6">**gMRX**</Highlight> and <Highlight color="#bf96c6">**wMRX**</Highlight> in the pool.
+If the pool is not empty, the rate is based on the total supply of <Highlight color="#bf96c6">**LGP-LP**</Highlight> and the amount of <Highlight color="#bf96c6">**gMRX**</Highlight> and <Highlight color="#bf96c6">**wMRX**</Highlight> in the pool.
 
 $\large\text{amountLP} = \frac{{\text{totalSupply} \times \left(\sqrt{\text{newBalanceMRX} \times \text{newBalanceGMRX}} - \sqrt{\text{balanceMRX} \times \text{balanceGMRX}}\right)}}{\sqrt{\text{balanceMRX} \times \text{balanceGMRX}}}$
 
