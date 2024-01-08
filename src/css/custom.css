@@ -22,9 +22,15 @@
   --ifm-alert-foreground-color: var(--ifm-color-primary-lightest);
   --ifm-alert-border-color: var(--ifm-color-primary-lightest);
 }
+
+.breadcrumbs__link {
+  font-weight: 600;
+}
+
 .table-of-contents__link {
   padding-left: 12px;
   border-radius: 3px;
+  font-weight: 600;
 }
 
 .table-of-contents__link:hover,
