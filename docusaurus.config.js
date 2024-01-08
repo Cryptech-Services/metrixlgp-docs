@@ -11,7 +11,7 @@ import rehypeKatex from 'rehype-katex';
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Metrix LGP Docs',
-  tagline: 'Creating liquidity from governance',
+  tagline: 'Creating liquid gMRX from locked MRX',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
