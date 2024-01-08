@@ -5,4 +5,4 @@ title: Managing Liquidity
 
 # Managing Liquidity
 
-Create liquidity and get
+Redeem LGP-LP tokens for the underlying assets in the pool.
