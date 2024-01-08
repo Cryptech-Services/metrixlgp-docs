@@ -22,7 +22,7 @@ This reward comes in the form of <Highlight color="#bf96c6">**wMRX**</Highlight>
 
 ## Minting
 
-<Highlight color="#bf96c6">**Gov**</Highlight> can only be minted by providing the required Metrix DGP collateral in <Highlight color="#bf96c6">**MRX**</Highlight>. Additionally the corresponding amount of <Highlight color="#bf96c6">**gMRX**</Highlight> is minted and issued to the minter of the <Highlight color="#bf96c6">**Gov**</Highlight> token.
+<Highlight color="#bf96c6">**Gov**</Highlight> can be minted by providing the required Metrix DGP collateral in <Highlight color="#bf96c6">**MRX**</Highlight>. Additionally the corresponding amount of <Highlight color="#bf96c6">**gMRX**</Highlight> is minted and issued to the minter of the <Highlight color="#bf96c6">**Gov**</Highlight> token.
 
 ## Burning
 

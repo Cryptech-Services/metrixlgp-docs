@@ -16,7 +16,7 @@ export const Image = ({src}) => (
 
 # <Image  /> wMRX - Wrapped Metrix
 
-<Highlight color="#bf96c6">**Wrapped Metrix**</Highlight> is an MRC20 copatible wrapped version of Metrix.
+<Highlight color="#bf96c6">**Wrapped Metrix**</Highlight> is an MRC20 compatible wrapped version of Metrix.
 
 ## Minting
 

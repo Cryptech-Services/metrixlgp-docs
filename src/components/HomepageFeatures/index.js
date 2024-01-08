@@ -4,6 +4,7 @@ import styles from './styles.module.css';
 
 const FeatureList = [
   {
+    href: '/category/earn',
     title: 'Earn',
     Image: require('@site/static/img/liquidity-interact-2.png').default,
     description: (
@@ -14,6 +15,7 @@ const FeatureList = [
     ),
   },
   {
+    href: '/category/trade',
     title: 'Trade',
     Image: require('@site/static/img/swap-interact-2.png').default,
     description: (
@@ -24,6 +26,7 @@ const FeatureList = [
     ),
   },
   {
+    href: '/category/govern',
     title: 'Govern',
     Image: require('@site/static/img/govern-interact-2.png').default,
     description: (
@@ -35,11 +38,13 @@ const FeatureList = [
   },
 ];
 
-function Feature({Image, title, description}) {
+function Feature({Image, href, title, description}) {
   return (
     <div className={clsx('col col--4')}>
       <div className='text--center'>
-        <img src={Image} className={styles.featureSvg} />
+        <a href={href}>
+          <img src={Image} className={styles.featureSvg} />
+        </a>
       </div>
       <div className='text--center padding-horiz--md'>
         <Heading as='h3'>{title}</Heading>
