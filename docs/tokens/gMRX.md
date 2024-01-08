@@ -22,7 +22,7 @@ export const Image = ({src}) => (
 
 ### Providing MRX Collateral
 
-<Highlight color="#bf96c6">**gMRX**</Highlight> is minted and issued to the minter of a <Highlight color="#bf96c6">**Gov**</Highlight> token.
+<Highlight color="#bf96c6">**gMRX**</Highlight> is minted and issued to the minter of a <Highlight color="#bf96c6">**Gov**</Highlight> token. The amount minted is at a 1:1 ration with the amount of <Highlight color="#bf96c6">**MRX**</Highlight> provided for collateral in the Metrix DGP.
 
 ### Flash Loans
 
