@@ -38,7 +38,7 @@ Flash loans can be utilized to mint gMRX so long as the loan and the fee are pai
 
 The rate of this redemption is calculated based on the amount of <Highlight color="#bf96c6">**gMRX**</Highlight> and <Highlight color="#bf96c6">**MRX**</Highlight> liquidity available in the liquidity pool.
 
-$\text{amountMRX} = \frac{{\text{burnAmount} \times \left(\frac{{\text{poolMRX} \times 10^8}}{{\text{poolGMRX}}}\right)}}{{10^8}}$
+$\huge\text{amountMRX} = \frac{{\text{burnAmount} \times \left(\frac{{\text{poolMRX} \times 10^8}}{{\text{poolGMRX}}}\right)}}{{10^8}}$
 
 ## Providing Liquidity
 
@@ -50,11 +50,11 @@ The rate of <Highlight color="#bf96c6">**LGP-LP**</Highlight> tokens issued for 
 
 If the pool is empty, the rate is based on the square root of the product.
 
-$\text{amountLP} = \sqrt{\text{newBalanceMRX} \times \text{newBalanceGMRX}}$
+$\huge\text{amountLP} = \sqrt{\text{newBalanceMRX} \times \text{newBalanceGMRX}}$
 
 If the pool is not empty, the rate is based on the <Highlight color="#bf96c6">**gMRX**</Highlight> and <Highlight color="#bf96c6">**wMRX**</Highlight> in the pool.
 
-$\text{amountLP} = \frac{{\text{totalSupply} \times \left(\sqrt{\text{newBalanceMRX} \times \text{newBalanceGMRX}} - \sqrt{\text{balanceMRX} \times \text{balanceGMRX}}\right)}}{\sqrt{\text{balanceMRX} \times \text{balanceGMRX}}}$
+$\huge\text{amountLP} = \frac{{\text{totalSupply} \times \left(\sqrt{\text{newBalanceMRX} \times \text{newBalanceGMRX}} - \sqrt{\text{balanceMRX} \times \text{balanceGMRX}}\right)}}{\sqrt{\text{balanceMRX} \times \text{balanceGMRX}}}$
 
 ## Trading
 
