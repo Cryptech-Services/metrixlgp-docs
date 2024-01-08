@@ -16,7 +16,9 @@ The Metrix Liquid Governance Protocol (LGP) leverages the MetrixCoin Decentraliz
 
 These AutoGovernors ensure that 20% royalties are paid to the corresponding g token holder and that the built in <Highlight color="#bf96c6">**wMRX**</Highlight>/<Highlight color="#bf96c6">**gMRX**</Highlight> liquidity pool always has a regular stream of <Highlight color="#bf96c6">**MRX**</Highlight> rewards. When g tokens are burned, the AutoGovernor attached to it is destroyed and the <Highlight color="#bf96c6">**MRX**</Highlight> collateral is injected intol the built in <Highlight color="#bf96c6">**wMRX**</Highlight>/<Highlight color="#bf96c6">**gMRX**</Highlight> liquidity pool.
 
-# Minting <Highlight color="#bf96c6">g</Highlight> and <Highlight color="#bf96c6">gMRX</Highlight>
+The primary objective of the Metrix LGP is to create a way to instantly gain access to liquidity while still maintaining governing rights in the MetrixCoin DGP.
+
+## Minting <Highlight color="#bf96c6">g</Highlight> and <Highlight color="#bf96c6">gMRX</Highlight>
 
 Minters deposit the required <Highlight color="#bf96c6">**MRX**</Highlight> collateral needed to create a new AutoGovernor and mint both <Highlight color="#bf96c6">**Gov (g)**</Highlight> and <Highlight color="#bf96c6">**Liquid Governance Metrix (gMRX)**</Highlight>
 
