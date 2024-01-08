@@ -18,9 +18,11 @@ export const Image = ({src}) => (
 
 <Highlight color="#bf96c6">**Metrix**</Highlight> is the native gas coin of the MetrixCoin blockchain.
 
-Metrix is a decentralized blockchain project sorftware forked from Qtum, built on Bitcoin's UTXO model, with support for Ethereum Virtual Machine based smart contracts, and secured by a proof of stake consensus model. It achieves this through the revolutionary Account Abstraction Layer which allows the EVM to communicate with Metrix's Bitcoin-like UTXO blockchain. For more general information about the original Qtum blockchain, go to [**qtum.org**](https://qtum.org)
+Metrix is a decentralized blockchain project software forked from Qtum, built on Bitcoin's UTXO model, with support for Ethereum Virtual Machine based smart contracts, and secured by a proof of stake consensus model. It achieves this through the revolutionary Account Abstraction Layer which allows the EVM to communicate with Metrix's Bitcoin-like UTXO blockchain.
 
-The major features of the Metrix network include:
+For more general information about the original Qtum blockchain, go to [**qtum.org**](https://qtum.org)
+
+**The major features of the Metrix network include:**
 
 - Compatibility with the Ethereum Virtual Machine, which allows for compatibility with most existing Solidity based smart contracts. No special solidity compiler is required to deploy your smart contract to Metrix.
 - A Proof of Stake consensus system which is optimized for Metrix's contract model. Any user can stake and help to secure the network.

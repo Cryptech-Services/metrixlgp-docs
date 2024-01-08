@@ -24,9 +24,17 @@ export const Image = ({src}) => (
 
 ## Burning
 
+<Highlight color="#bf96c6">**gMRX**</Highlight> can be redeemed and is burned in exchange for <Highlight color="#bf96c6">**MRX**</Highlight>.
+
+`amountMRX = (burnAmount * ((poolMRX * 1e8) / poolGMRX)) / 1e8`
+
 ## Providing Liquidity
 
+A built in <Highlight color="#bf96c6">**wMRX**</Highlight>/<Highlight color="#bf96c6">**gMRX**</Highlight> liquidity pool is provided. All trading fees and 80% of the AutoGovernor rewards are injected into the pool, increasing the amount of <Highlight color="#bf96c6">**wMRX**</Highlight> and <Highlight color="#bf96c6">**gMRX**</Highlight> that the <Highlight color="#bf96c6">**LGP-LP**</Highlight> can be redeemed for.
+
 ## Trading
+
+<Highlight color="#bf96c6">**wMRX**</Highlight>/<Highlight color="#bf96c6">**MRX**</Highlight> and <Highlight color="#bf96c6">**gMRX**</Highlight> can be traded directly through the built in liquidity pool.
 
 ### Flash Loans
 
