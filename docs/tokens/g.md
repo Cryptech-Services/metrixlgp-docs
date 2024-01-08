@@ -26,7 +26,15 @@ This reward comes in the form of <Highlight color="#bf96c6">**wMRX**</Highlight>
 
 ## Burning
 
+<Highlight color="#bf96c6">**g**</Highlight> tokens are burnable which will unenroll the corresponding AutoGovernor, returning it's MRX collateral to the built in <Highlight color="#bf96c6">**wMRX**</Highlight>/<Highlight color="#bf96c6">**gMRX**</Highlight> liquidity pool.
+
 ## Governing
+
+Rights for both creation of and voting on both Budget and DGP proposals are maintained by the <Highlight color="#bf96c6">**g**</Highlight> token holder.
+
+## Royalties
+
+A **20% royalty is taken from every AutoGovernor reward** which corresponds to the specific <Highlight color="#bf96c6">**g**</Highlight> token held by an address. Rewards are automatically distributed in the form of wMRX every 1920 blocks or roughly every 48 hours.
 
 ## Contract Details
 
