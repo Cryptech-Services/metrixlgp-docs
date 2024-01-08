@@ -8,10 +8,10 @@ const FeatureList = [
     title: 'Earn',
     Image: require('@site/static/img/liquidity-interact-2.png').default,
     description: (
-      <>
+      <strong>
         Provide MRX and gMRX liquidity in exchange for LGP-LP and a portion of
         the trading fees.
-      </>
+      </strong>
     ),
   },
   {
@@ -19,10 +19,10 @@ const FeatureList = [
     title: 'Trade',
     Image: require('@site/static/img/swap-interact-2.png').default,
     description: (
-      <>
-        Trade between MRX and gMRX instantly, while always retaining complete
-        ownership of your keys.
-      </>
+      <strong>
+        Trade between MRX and gMRX instantly, while always retaining ownership
+        of your keys.
+      </strong>
     ),
   },
   {
@@ -30,10 +30,10 @@ const FeatureList = [
     title: 'Govern',
     Image: require('@site/static/img/govern-interact-2.png').default,
     description: (
-      <>
-        Deposit MRX to mint Gov and gMRX allowing you to retain your DGP voting
-        rights while still earning MRX.
-      </>
+      <strong>
+        Deposit MRX to mint g and gMRX allowing you to retain your DGP voting
+        rights and earn MRX.
+      </strong>
     ),
   },
 ];
@@ -46,8 +46,12 @@ function Feature({Image, href, title, description}) {
           <img src={Image} className={styles.featureSvg} />
         </a>
       </div>
+
       <div className='text--center padding-horiz--md'>
-        <Heading as='h3'>{title}</Heading>
+        <Heading as='h3'>
+          <a href={href}>{title}</a>
+        </Heading>
+
         <p>{description}</p>
       </div>
     </div>
