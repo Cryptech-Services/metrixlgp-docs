@@ -48,6 +48,12 @@ A built in <Highlight color="#bf96c6">**wMRX**</Highlight>/<Highlight color="#bf
 
 The rate of <Highlight color="#bf96c6">**LGP-LP**</Highlight> tokens issued for liquidity is dependent on the current balances of the liquidity pool. Should the adding of liquidity exceed a 1% price slippage threshold, it will be treated as a trade and a 0.3% trading fee will be incurred.
 
+If the pool is empty, the rate is based on the square root of the product.
+
+$\text{amountLP} = \sqrt{\text{newBalanceMRX} \times \text{newBalanceGMRX}}$
+
+If the pool is not empty, the rate is based on the <Highlight color="#bf96c6">**gMRX**</Highlight> and <Highlight color="#bf96c6">**wMRX**</Highlight> in the pool.
+
 $\text{amountLP} = \frac{{\text{totalSupply} \times \left(\sqrt{\text{newBalanceMRX} \times \text{newBalanceGMRX}} - \sqrt{\text{balanceMRX} \times \text{balanceGMRX}}\right)}}{\sqrt{\text{balanceMRX} \times \text{balanceGMRX}}}$
 
 ## Trading
