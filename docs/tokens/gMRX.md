@@ -28,7 +28,7 @@ export const Image = ({src}) => (
 
 A flash loan is a type of uncollateralized loan that lets a user borrow assets with no upfront collateral as long as the borrowed assets are paid back within the same blockchain transaction.
 
-Flash loans can be utilized to mint gMRX so long as the loan and the fee are paid back in the same transacion. Any gMRX generated through a flash loan is burned after repaid.
+Flash loans can be utilized to mint gMRX so long as the loan and the 1% fee are paid back in the same transacion. Any gMRX generated through a flash loan is burned after repaid. The 1% flash loan fee is injected into the liquidity pool.
 
 ## Burning
 
