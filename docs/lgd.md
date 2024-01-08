@@ -12,6 +12,8 @@ style={{color}}>
 
 # Liquid Governor Derivatives
 
+Liquid governor derivatives drive the Metrix Liquid Governor Protocol.
+
 ## Derivative
 
 A derivative is a financial contract that derives its value from an underlying asset, like a stock, currency, or commodity. It allows investors to speculate or hedge against price movements without owning the asset itself.
