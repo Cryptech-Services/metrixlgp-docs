@@ -60,6 +60,12 @@ $\large\text{amountLP} = \frac{{\text{totalSupply} \times \left(\sqrt{\text{newB
 
 <Highlight color="#bf96c6">**wMRX**</Highlight>/<Highlight color="#bf96c6">**MRX**</Highlight> and <Highlight color="#bf96c6">**gMRX**</Highlight> can be traded directly through the built in liquidity pool. A 0.3% trading fee is applied to all trades which is injected into the liquidity pool.
 
+## Token Details
+
+|       Token Name       | Token Symbol | Decimals |
+| :--------------------: | :----------: | :------: |
+| Liquid Governor Metrix |     gMRX     |    8     |
+
 ## Contract Details
 
 ### Contract Address

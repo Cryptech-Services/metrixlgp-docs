@@ -14,7 +14,43 @@ style={{color}}>
 
 A token for liquidity providers which can be redeemed for the liquidity.
 
+## Issuance
+
 LGP-LP is minted when <Highlight color="#bf96c6">**wMRX**</Highlight> and <Highlight color="#bf96c6">**gMRX**</Highlight> are added to the liquidity pool. Whenever a liquidity provider wants to exit their position, they can be redeemed for the underlying <Highlight color="#bf96c6">**wMRX**</Highlight> and <Highlight color="#bf96c6">**gMRX**</Highlight> in the liquidity pool.
+Calculate `newReserveMRX` by adding `amountMRX` to the current `reserveMRX`, and `newReserveGMRX` by adding `amountGMRX` to the current `reserveGMRX`. Compute the square root of the product of `newReserveMRX` and `newReserveGMRX` as `sqrtK`.
+
+If the total supply is equal to 0, then the number of <Highlight color="#bf96c6">**LGP-LP**</Highlight> tokens `lpAmount` is set to `sqrtK` (initial LP tokens based on the square root of the product).
+
+Otherwise, if there is a total supply, calculate the <Highlight color="#bf96c6">**LGP-LP**</Highlight> tokens `lpAmount` by taking the total supply of <Highlight color="#bf96c6">**LGP-LP**</Highlight>, multiplying it by the difference between `sqrtK` and the square root of the product of the current reserves `reserveMRX` and `reserveGMRX`, and dividing the result by the square root of the product of the current reserves."
+
+$$
+\begin{align*}
+    \text{newReserveMRX} &= \text{reserveMRX} + \text{amountMRX} \\
+    \text{newReserveGMRX} &= \text{reserveGMRX} + \text{amountGMRX} \\
+    \text{sqrtK} &= \sqrt{\text{newReserveMRX} \times \text{newReserveGMRX}} \\
+    \text{lpAmount} &=
+    \begin{cases}
+        \text{sqrtK}, & \text{if } \text{totalSupply} = 0 \\
+        \frac{\text{totalSupply} \times (\text{sqrtK} - \sqrt{\text{reserveMRX} \times \text{reserveGMRX}})}{\sqrt{\text{reserveMRX} \times \text{reserveGMRX}}}, & \text{otherwise}
+    \end{cases}
+\end{align*}
+$$
+
+## Redemption
+
+<Highlight color="#bf96c6">**LGP-LP**</Highlight> can be used to redeem the underlying <Highlight color="#bf96c6">**gMRX**</Highlight> and <Highlight color="#bf96c6">**wMRX**</Highlight> in the liquidity pool.
+
+The redemption rate for <Highlight color="#bf96c6">**LGP-LP**</Highlight> is based on the current reserves of <Highlight color="#bf96c6">**wMRX**</Highlight> and <Highlight color="#bf96c6">**gMRX**</Highlight> as well as the total supply of <Highlight color="#bf96c6">**LGP-LP**</Highlight> tokens.
+
+$\large\text{amountMRX} =  \frac{{\text{amountLP} \times \text{poolMRX}}}{{\text{totalSupplyLP}}}$
+
+$\large\text{amountGMRX} = \frac{{\text{amountLP} \times \text{poolGMRX}}}{{\text{totalSupplyLP}}}$
+
+## Token Details
+
+|     Token Name      | Token Symbol | Decimals |
+| :-----------------: | :----------: | :------: |
+| LiquidGovernance LP |    LGP-LP    |    18    |
 
 ## Contract Details
 

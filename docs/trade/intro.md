@@ -5,7 +5,7 @@ title: Getting Started
 
 # Getting Started
 
-## Create A Wallet
+## Create a Wallet
 
 ## Buying gMRX
 

@@ -26,6 +26,12 @@ export const Image = ({src}) => (
 
 <Highlight color="#bf96c6">**wMRX**</Highlight> can be burned and withdrawn to <Highlight color="#bf96c6">**MRX**</Highlight> at a 1:1 ration by calling the `withdraw(uint amount)` method on the contract.
 
+## Token Details
+
+|   Token Name   | Token Symbol | Decimals |
+| :------------: | :----------: | :------: |
+| Wrapped Metrix |     wMRX     |    8     |
+
 ## Contract Details
 
 ### Contract Address

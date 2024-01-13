@@ -28,3 +28,9 @@ For more general information about the original Qtum blockchain, go to [**qtum.o
 - A Proof of Stake consensus system which is optimized for Metrix's contract model. Any user can stake and help to secure the network.
 - The Decentralized Governance Protocol is completely implemented and functional, which allows certain network parameters to be modified without a fork or other network disruption. This currently controls parameters like block size, gas prices, etc.
 - Uses the UTXO transaction model and is compatible with Bitcoin, allowing for existing tooling and workflows to be used with Metrix. This allows for the infamous SPV protocol to be used which is ideal for light wallets on mobile phones and IoT devices.
+
+## Coin Details
+
+| Blockchain Name | Coin Name | Token Symbol | Decimals | Target Blocktime |
+| :-------------: | :-------: | :----------: | :------: | :--------------: |
+|   Metrix Coin   |  Metrix   |     MRX      |    8     |       90s        |
