@@ -21,7 +21,7 @@ Calculate `newReserveMRX` by adding `amountMRX` to the current `reserveMRX`, and
 
 If the total supply is equal to 0, then the number of <Highlight color="#bf96c6">**LGP-LP**</Highlight> tokens `lpAmount` is set to `sqrtK` (initial LP tokens based on the square root of the product).
 
-Otherwise, if there is a total supply, calculate the <Highlight color="#bf96c6">**LGP-LP**</Highlight> tokens `lpAmount` by taking the total supply of <Highlight color="#bf96c6">**LGP-LP**</Highlight>, multiplying it by the difference between `sqrtK` and the square root of the product of the current reserves `reserveMRX` and `reserveGMRX`, and dividing the result by the square root of the product of the current reserves."
+Otherwise, if there is a total supply, calculate the <Highlight color="#bf96c6">**LGP-LP**</Highlight> tokens `lpAmount` by taking the total supply of <Highlight color="#bf96c6">**LGP-LP**</Highlight>, multiplying it by the difference between `sqrtK` and the square root of the product of the current reserves `reserveMRX` and `reserveGMRX`, and dividing the result by the square root of the product of the current reserves.
 
 $$
 \begin{align*}
