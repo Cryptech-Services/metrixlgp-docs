@@ -36,9 +36,9 @@ Flash loans can be utilized to mint gMRX so long as the loan and the 1% fee are 
 
 ### Redemption Rate
 
-The rate of this redemption is calculated based on the amount of <Highlight color="#bf96c6">**gMRX**</Highlight> and <Highlight color="#bf96c6">**MRX**</Highlight> liquidity available in the liquidity pool.
+The rate of this redemption is calculated based on the amount of <Highlight color="#bf96c6">**gMRX**</Highlight> and <Highlight color="#bf96c6">**wMRX**</Highlight> liquidity available in the liquidity pool. Optionally <Highlight color="#bf96c6">**MRX**</Highlight> can be unwrapped to <Highlight color="#bf96c6">**MRX**</Highlight> during the burn.
 
-$\large\text{amountMRX} = \text{burnAmount} \times \left(\frac{\text{poolMRX}}{\text{poolGMRX}}\right)$
+$\large\text{amountMRX} = \text{burnGMRX} \times \frac{{\text{poolMRX}}}{{\text{poolGMRX}}}$
 
 ## Providing Liquidity
 
@@ -58,7 +58,7 @@ $\large\text{amountLP} = \frac{{\text{totalSupply} \times \left(\sqrt{\text{newB
 
 ## Trading
 
-<Highlight color="#bf96c6">**wMRX**</Highlight>/<Highlight color="#bf96c6">**MRX**</Highlight> and <Highlight color="#bf96c6">**gMRX**</Highlight> can be traded directly through the built in liquidity pool.
+<Highlight color="#bf96c6">**wMRX**</Highlight>/<Highlight color="#bf96c6">**MRX**</Highlight> and <Highlight color="#bf96c6">**gMRX**</Highlight> can be traded directly through the built in liquidity pool. A 0.3% trading fee is applied to all trades which is injected into the liquidity pool.
 
 ## Contract Details
 
@@ -73,13 +73,21 @@ $\large\text{amountLP} = \frac{{\text{totalSupply} \times \left(\sqrt{\text{newB
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20FlashMint.sol";
+import "@metrixnames/mns-contracts/contracts/registry/MNS.sol";
+import "@metrixnames/mns-contracts/contracts/registry/ReverseRegistrar.sol";
 
 contract LiquidGovernorMRX is ERC20, ERC20Burnable, Ownable, ERC20FlashMint {
-    constructor() ERC20("Liquid Governor Metrix", "gMRX") {}
+    constructor(address _mns) ERC20("Liquid Governor Metrix", "gMRX") {
+        MNS mns = MNS(_mns);
+        ReverseRegistrar registrar = ReverseRegistrar(
+            mns.owner(ADDR_REVERSE_NODE)
+        );
+        registrar.setName("Metrix LGP:Liquid Governor MRX (gMRX)");
+    }
 
     function mint(address to, uint256 amount) public onlyOwner {
         _mint(to, amount);
@@ -87,6 +95,17 @@ contract LiquidGovernorMRX is ERC20, ERC20Burnable, Ownable, ERC20FlashMint {
 
     function decimals() public view virtual override returns (uint8) {
         return 8;
+    }
+
+    /**
+     * @dev Returns 10% of the total supply, the maximum amount of tokens available for loan.
+     * @param token The address of the token that is requested.
+     * @return The amount of token that can be loaned.
+     */
+    function maxFlashLoan(
+        address token
+    ) public view virtual override returns (uint256) {
+        return token == address(this) ? ERC20.totalSupply() / 10 : 0;
     }
 
     /**
@@ -120,6 +139,4 @@ contract LiquidGovernorMRX is ERC20, ERC20Burnable, Ownable, ERC20FlashMint {
         return address(owner());
     }
 }
-
-
 ```

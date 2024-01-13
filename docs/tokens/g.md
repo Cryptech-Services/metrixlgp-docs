@@ -53,9 +53,17 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@metrixnames/mns-contracts/contracts/registry/MNS.sol";
+import "@metrixnames/mns-contracts/contracts/registry/ReverseRegistrar.sol";
 
 contract Gov is ERC721, ERC721Enumerable, ERC721Burnable, Ownable {
-    constructor() ERC721("Gov", "g") {}
+    constructor(address _mns) ERC721("Gov", "g") {
+        MNS mns = MNS(_mns);
+        ReverseRegistrar registrar = ReverseRegistrar(
+            mns.owner(ADDR_REVERSE_NODE)
+        );
+        registrar.setName("Metrix LGP:Gov (g)");
+    }
 
     function safeMint(address to, uint256 tokenId) public onlyOwner {
         _safeMint(to, tokenId);
@@ -78,5 +86,4 @@ contract Gov is ERC721, ERC721Enumerable, ERC721Burnable, Ownable {
         return super.supportsInterface(interfaceId);
     }
 }
-
 ```

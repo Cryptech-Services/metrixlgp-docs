@@ -20,9 +20,13 @@ The LiquidGovernance contract is the main public facing contract which allows pa
 
 LiquidGovernance is address agnostic, and by holding a <Highlight color="#bf96c6">**g**</Highlight> token, a user or smart contract is able to maintain Metrix DGP governing rights over the corresponding AutoGovernor. Additionally the <Highlight color="#bf96c6">**g**</Highlight> token can be burned to unenroll the AutoGovernor and return the underlying <Highlight color="#bf96c6">**MRX**</Highlight> collateral back into the Metrix LGP liquidity pool.
 
-## Migrations
+## Creating AutoGovernors
 
-In the case that the Metrix DGP is upgraded in the future, a migration mechanism is built into the contracts which will allow migrations only be done if 90% of the supply of <Highlight color="#bf96c6">**gMRX**</Highlight> is locked to support the migration.
+AutoGovernors are semi-autonomous smart contract governors participating in the Metrix DGP. Control over the release of the collateral to the built in liquidity pool as well as voting rights is maintained by the holder of the <Highlight color="#bf96c6">**g**</Highlight> token which has a tokenId of the AutoGovernor's contract address. This allows ownership over the <Highlight color="#bf96c6">**g**</Highlight> token to be easily transferred and/or traded.
+
+## Handling DGP Rewards
+
+The LiquidGovernance handles all incoming funds and routes `20%` of rewards from AutoGovernors to the corresponding <Highlight color="#bf96c6">**g**</Highlight> token holder, routing the remaining `80%` into the built in liquidity pool.
 
 ## Contract Details
 
@@ -34,5 +38,219 @@ In the case that the Metrix DGP is upgraded in the future, a migration mechanism
 ### Sourcecode
 
 ```js
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.7;
 
+import "./Gov.sol";
+import "./Pool.sol";
+import "./WrappedMetrix.sol";
+import "./AutoGovernor.sol";
+import "./LiquidGovernorMRX.sol";
+import "./factory/IAutoGovernorFactory.sol";
+import "@metrixnames/mns-contracts/contracts/registry/MNS.sol";
+import "@metrixnames/mns-contracts/contracts/registry/ReverseRegistrar.sol";
+
+contract LiquidGovernance is IAutoGovernorFactory {
+    address public mns;
+    address public governance;
+    address public immutable g;
+    address public immutable gmrx;
+    address public immutable mrx;
+    address public immutable pool;
+
+    constructor(address _governance, address _mrx, address _mns) {
+        governance = _governance;
+        address _gmrx = address(new LiquidGovernorMRX(_mns));
+        gmrx = _gmrx;
+        mrx = _mrx;
+        pool = address(new Pool(_mrx, _gmrx, _mns));
+        g = address(new Gov(_mns));
+        mns = _mns;
+        ReverseRegistrar registrar = ReverseRegistrar(
+            MNS(mns).owner(ADDR_REVERSE_NODE)
+        );
+        registrar.setName("Metrix LGP");
+    }
+
+    modifier onlyHolder(address autoGovernor) {
+        uint256 tokenId = uint256(uint160(autoGovernor));
+        try Gov(g).ownerOf(tokenId) returns (address owner) {
+            require(msg.sender == owner, "Only executable by the holder");
+        } catch {
+            revert("Token does not exist");
+        }
+        _;
+    }
+
+    fallback() external payable {
+        if (msg.value > 0) {
+            uint256 tokenId = uint256(uint160(msg.sender));
+            try Gov(g).ownerOf(tokenId) returns (address owner) {
+                if (owner != address(0)) {
+                    (
+                        uint256 blockHeight,
+                        ,
+                        uint256 collateral,
+                        ,
+
+                    ) = Governance(governance).governors(msg.sender);
+                    if (blockHeight > 0 && collateral > 0) {
+                        uint256 govAmt = (msg.value * 20) / 100;
+                        WrappedMetrix token = WrappedMetrix(payable(mrx));
+                        token.deposit{value: msg.value}();
+                        token.transfer(pool, msg.value - govAmt);
+                        token.transfer(owner, govAmt);
+                    } else {
+                        WrappedMetrix token = WrappedMetrix(payable(mrx));
+                        token.deposit{value: msg.value}();
+                        token.transfer(pool, msg.value);
+                    }
+                } else {
+                    WrappedMetrix token = WrappedMetrix(payable(mrx));
+                    token.deposit{value: msg.value}();
+                    token.transfer(pool, msg.value);
+                }
+            } catch {
+                WrappedMetrix token = WrappedMetrix(payable(mrx));
+                token.deposit{value: msg.value}();
+                token.transfer(pool, msg.value);
+            }
+        }
+    }
+
+    receive() external payable {
+        if (msg.value > 0) {
+            uint256 tokenId = uint256(uint160(msg.sender));
+            try Gov(g).ownerOf(tokenId) returns (address owner) {
+                if (owner != address(0)) {
+                    (
+                        uint256 blockHeight,
+                        ,
+                        uint256 collateral,
+                        ,
+
+                    ) = Governance(governance).governors(msg.sender);
+                    if (blockHeight > 0 && collateral > 0) {
+                        uint256 govAmt = (msg.value * 20) / 100;
+                        WrappedMetrix token = WrappedMetrix(payable(mrx));
+                        token.deposit{value: msg.value}();
+                        token.transfer(pool, msg.value - govAmt);
+                        token.transfer(owner, govAmt);
+                    } else {
+                        WrappedMetrix token = WrappedMetrix(payable(mrx));
+                        token.deposit{value: msg.value}();
+                        token.transfer(pool, msg.value);
+                    }
+                } else {
+                    WrappedMetrix token = WrappedMetrix(payable(mrx));
+                    token.deposit{value: msg.value}();
+                    token.transfer(pool, msg.value);
+                }
+            } catch {
+                WrappedMetrix token = WrappedMetrix(payable(mrx));
+                token.deposit{value: msg.value}();
+                token.transfer(pool, msg.value);
+            }
+        }
+    }
+
+    function createGovernor() public payable override {
+        uint256 requiredCollateral = DGP(Governance(governance).dgpAddress())
+            .getGovernanceCollateral()[0];
+        require(
+            msg.value == requiredCollateral,
+            "LiquidGovernance: Invalid collateral"
+        );
+        AutoGovernor governor = new AutoGovernor(governance, mns);
+
+        (bool success, ) = payable(address(governor)).call{value: msg.value}(
+            ""
+        );
+        require(
+            success,
+            "LiquidGovernance: Failed to transfer funds to the AutoGovernor"
+        );
+
+        require(
+            payable(address(governor)).balance == requiredCollateral,
+            "LiquidGovernance: Insufficient funding"
+        );
+        governor.enroll();
+        Gov(g).safeMint(msg.sender, uint256(uint160(address(governor))));
+        LiquidGovernorMRX(gmrx).mint(msg.sender, requiredCollateral);
+        emit GovernorCreated(msg.sender, address(governor));
+    }
+
+    function ping(
+        address governorAddress
+    ) public override onlyHolder(governorAddress) {
+        require(
+            governorAddress != address(0),
+            "LiquidGovernance: Governor does not exist"
+        );
+        AutoGovernor governor = AutoGovernor(payable(governorAddress));
+        governor.ping();
+    }
+
+    function unenroll(
+        address governorAddress,
+        bool /*force*/
+    ) public override onlyHolder(governorAddress) {
+        require(
+            governorAddress != address(0),
+            "LiquidGovernance: Governor does not exist"
+        );
+        Gov(g).burn(uint256(uint160(governorAddress)));
+        AutoGovernor governor = AutoGovernor(payable(governorAddress));
+        governor.unenroll(false);
+    }
+
+    function startProposal(
+        address governorAddress,
+        string memory title,
+        string memory description,
+        string memory url,
+        uint256 requested,
+        uint8 duration
+    ) public payable override onlyHolder(governorAddress) {
+        require(
+            governorAddress != address(0),
+            "LiquidGovernance: Governor does not exist"
+        );
+        AutoGovernor governor = AutoGovernor(payable(governorAddress));
+        governor.startProposal{value: msg.value}(
+            title,
+            description,
+            url,
+            requested,
+            duration
+        );
+    }
+
+    function voteForProposal(
+        address governorAddress,
+        uint8 proposalId,
+        Budget.Vote vote
+    ) public override onlyHolder(governorAddress) {
+        require(
+            governorAddress != address(0),
+            "LiquidGovernance: Governor does not exist"
+        );
+        AutoGovernor governor = AutoGovernor(payable(governorAddress));
+        governor.voteForProposal(proposalId, vote);
+    }
+
+    function addProposal(
+        address governorAddress,
+        DGP.ProposalType proposalType,
+        address proposalAddress
+    ) public override onlyHolder(governorAddress) {
+        require(
+            governorAddress != address(0),
+            "LiquidGovernance: Governor does not exist"
+        );
+        AutoGovernor governor = AutoGovernor(payable(governorAddress));
+        governor.addProposal(proposalType, proposalAddress);
+    }
+}
 ```

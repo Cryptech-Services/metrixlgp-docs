@@ -29,12 +29,19 @@ LGP-LP is minted when <Highlight color="#bf96c6">**wMRX**</Highlight> and <Highl
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@metrixnames/mns-contracts/contracts/registry/MNS.sol";
+import "@metrixnames/mns-contracts/contracts/registry/ReverseRegistrar.sol";
 
 contract LiquidityProvider is ERC20, ERC20Burnable, Ownable {
-    constructor() ERC20("LiquidGovernance-LP", "LG-LP") {}
+    constructor(address _mns) ERC20("LiquidGovernance-LP", "LG-LP") {
+        ReverseRegistrar registrar = ReverseRegistrar(
+            MNS(_mns).owner(ADDR_REVERSE_NODE)
+        );
+        registrar.setName("Metrix LGP:LiquidGovernance-LP (LGP-LP)");
+    }
 
     function mint(address to, uint256 amount) public onlyOwner {
         _mint(to, amount);
@@ -44,5 +51,4 @@ contract LiquidityProvider is ERC20, ERC20Burnable, Ownable {
         _burn(_msgSender(), amount);
     }
 }
-
 ```
