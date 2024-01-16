@@ -151,6 +151,7 @@ const config = {
         copyright: `Copyright © ${new Date().getFullYear()} Cryptech Services. Built with Docusaurus.`,
       },
       prism: {
+        additionalLanguages: ['solidity'],
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
       },

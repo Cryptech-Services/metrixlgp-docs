@@ -37,7 +37,7 @@ The LiquidGovernance handles all incoming funds and routes `20%` of rewards from
 
 ### Sourcecode
 
-```js
+```sol
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
@@ -63,8 +63,9 @@ contract LiquidGovernance is IAutoGovernorFactory {
         address _gmrx = address(new LiquidGovernorMRX(_mns));
         gmrx = _gmrx;
         mrx = _mrx;
-        pool = address(new Pool(_mrx, _gmrx, _mns));
-        g = address(new Gov(_mns));
+        address _g = address(new Gov(_mns));
+        g = _g;
+        pool = address(new Pool(_mrx, _gmrx, _mns, _g));
         mns = _mns;
         ReverseRegistrar registrar = ReverseRegistrar(
             MNS(mns).owner(ADDR_REVERSE_NODE)

@@ -41,7 +41,7 @@ export const Image = ({src}) => (
 
 ### Sourcecode
 
-```js
+```sol
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
@@ -88,5 +88,4 @@ contract WrappedMetrix is ERC20, ERC20Burnable {
         emit Withdrawal(msg.sender, amount);
     }
 }
-
 ```

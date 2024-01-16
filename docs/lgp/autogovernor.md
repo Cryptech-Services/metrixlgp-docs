@@ -26,7 +26,7 @@ In the case of the Metrix LGP, the LiquidGovernance contract is the owner of eve
 
 ### Sourcecode
 
-```js
+```sol
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.7;

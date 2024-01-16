@@ -45,7 +45,7 @@ A **20% royalty is taken from every AutoGovernor reward** which corresponds to t
 
 ### Sourcecode
 
-```js
+```sol
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 

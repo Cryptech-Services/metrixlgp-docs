@@ -28,17 +28,9 @@ $\large\text{amountTo} = \text{amountFrom} \times \frac{{\text{poolTo}}}{{\text{
 
 Providing <Highlight color="#bf96c6">**gMRX**</Highlight> and <Highlight color="#bf96c6">**wMRX**</Highlight> as liquidity will mint the provider <Highlight color="#bf96c6">**LGP-LP**</Highlight> which is the pools liquidity provider token. These tokens can be redeemed for the underlying <Highlight color="#bf96c6">**gMRX**</Highlight> and <Highlight color="#bf96c6">**wMRX**</Highlight> in the pool.
 
-## Removing Liqudidty
+## Removing Liquidity
 
 Removing the liquidity is a process that involved redeeming <Highlight color="#bf96c6">**LGP-LP**</Highlight> tokens for the underlying <Highlight color="#bf96c6">**gMRX**</Highlight> and <Highlight color="#bf96c6">**wMRX**</Highlight> from the pool. <Highlight color="#bf96c6">**LGP-LP**</Highlight> is burned when redeemed.
-
-## Burning gMRX
-
-There is a built in mechanism for burning <Highlight color="#bf96c6">**gMRX**</Highlight> which allows any <Highlight color="#bf96c6">**gMRX**</Highlight> holder to burn <Highlight color="#bf96c6">**gMRX**</Highlight> at the market rate removing <Highlight color="#bf96c6">**wMRX**</Highlight> from the pool. Optionally <Highlight color="#bf96c6">**MRX**</Highlight> can be unwrapped to <Highlight color="#bf96c6">**MRX**</Highlight> during the burn.
-
-### Redemption Rate
-
-$\large\text{amountMRX} = \text{burnGMRX} \times \frac{{\text{poolMRX}}}{{\text{poolGMRX}}}$
 
 ## Liquidity Injections
 
@@ -60,19 +52,22 @@ Flash loan fees from loans of <Highlight color="#bf96c6">**gMRX**</Highlight> ha
 
 80% of the rewards from each of the AutoGovernors is automatically injected into the pool every 1920 blocks, roughly every 2 days.
 
-### Redemption Rate
+## Burning gMRX
 
-The rate of this redemption is calculated based on the amount of <Highlight color="#bf96c6">**gMRX**</Highlight> and <Highlight color="#bf96c6">**wMRX**</Highlight> liquidity available in the liquidity pool.
+There is a built in mechanism for burning <Highlight color="#bf96c6">**gMRX**</Highlight> which allows any <Highlight color="#bf96c6">**gMRX**</Highlight> holder to burn <Highlight color="#bf96c6">**gMRX**</Highlight> at the market rate removing <Highlight color="#bf96c6">**wMRX**</Highlight> from the pool. Optionally <Highlight color="#bf96c6">**MRX**</Highlight> can be unwrapped to <Highlight color="#bf96c6">**MRX**</Highlight> during the burn.
+
+### Redemption Rate
 
 $\large\text{amountMRX} = \text{burnGMRX} \times \frac{{\text{poolMRX}}}{{\text{poolGMRX}}}$
 
 ### Requirements for Burning
 
-- Amount burned must be greater than 0
-- The reserve of gMRX and wMRX in the pool must be more than 0
-- The reserve of gMRX and wMRX must be more than the amount burned
-- The pool must contain at least 50% of the total supply of gMRX
-- More than 50% slippage cannot be exceeded in the burning of the gMRX
+- **Hodl <Highlight color="#bf96c6">g</Highlight>** _or_ **Lock >= `1%` <Highlight color="#bf96c6">LGP-LP</Highlight> total supply**
+- **Amount burned must be greater than 0**
+- **The reserves of <Highlight color="#bf96c6">gMRX</Highlight> and <Highlight color="#bf96c6">wMRX</Highlight> in the pool must be greater than 0**
+- **The reserves of <Highlight color="#bf96c6">gMRX</Highlight> and <Highlight color="#bf96c6">wMRX</Highlight> must be greater than the amount burned**
+- **The pool must contain at least `50%` of the total supply of <Highlight color="#bf96c6">gMRX</Highlight>**
+- **More than `50%` slippage cannot be exceeded in the burning of the <Highlight color="#bf96c6">gMRX</Highlight>**
 
 ## Contract Details
 
@@ -83,13 +78,14 @@ $\large\text{amountMRX} = \text{burnGMRX} \times \frac{{\text{poolMRX}}}{{\text{
 
 ### Sourcecode
 
-```js
+```sol
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
 import "./LiquidityProvider.sol";
 import "./LiquidGovernorMRX.sol";
 import "./WrappedMetrix.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@metrixnames/mns-contracts/contracts/registry/MNS.sol";
@@ -101,18 +97,25 @@ contract Pool {
         uint256 burnAmount,
         uint256 releaseAmount
     );
+
+    event LockedLiquidity(address indexed sender, uint256 amountLP);
+
+    event UnlockedLiquidity(address indexed sender, uint256 amountLP);
+
     event AddLiquidity(
         address indexed sender,
         uint256 amountMRX,
         uint256 amountGMRX,
         uint256 amountLP
     );
+
     event RemoveLiquidity(
         address indexed sender,
         uint256 amountMRX,
         uint256 amountGMRX,
         uint256 amountLP
     );
+
     event Swap(
         address indexed sender,
         address from,
@@ -121,19 +124,45 @@ contract Pool {
         uint256 amountTo
     );
 
+    modifier notCooldown() {
+        require(
+            block.number >= lockCooldown[msg.sender],
+            "Pool: Cooldown in effect"
+        );
+        _;
+    }
+
     address public immutable mrx;
     address public immutable gmrx;
+    address public immutable g;
     address public immutable lp;
 
-    constructor(address _mrx, address _gmrx, address _mns) {
+    uint256 public totalLockedLP;
+    mapping(address => uint256) public lockedLP;
+    mapping(address => uint256) public lockCooldown;
+
+    constructor(address _mrx, address _gmrx, address _g, address _mns) {
         mrx = _mrx;
         gmrx = _gmrx;
+        g = _g;
         lp = address(new LiquidityProvider(_mns));
         MNS mns = MNS(_mns);
         ReverseRegistrar registrar = ReverseRegistrar(
             mns.owner(ADDR_REVERSE_NODE)
         );
-        registrar.setName("Metrix LGP:Pool");
+        registrar.setName("Metrix LGP:Pool wMRX/gMRX");
+    }
+
+    fallback() external payable {
+        if (msg.value > 0 && msg.sender != mrx) {
+            WrappedMetrix(payable(mrx)).deposit{value: msg.value}();
+        }
+    }
+
+    receive() external payable {
+        if (msg.value > 0 && msg.sender != mrx) {
+            WrappedMetrix(payable(mrx)).deposit{value: msg.value}();
+        }
     }
 
     function reserves()
@@ -145,15 +174,76 @@ contract Pool {
         gmrxReserve = IERC20(gmrx).balanceOf(address(this));
     }
 
-    function quote(
+    function traderDiscount(
+        address trader
+    ) external view returns (bool discount) {
+        discount = hasDiscount(trader);
+    }
+
+    function swapQuote(
         address from,
         address to,
         uint256 amountIn
-    ) external view returns (uint256 swapQuote) {
-        swapQuote = calculateSwapAmount(amountIn, from, to);
+    ) external view returns (uint256 amountOut, uint256 slippage) {
+        (amountOut, slippage) = calculateSlippage(from, to, amountIn);
     }
 
-    function burnAndRelease(uint256 amountGMRX, bool unwrapMRX) external {
+    function lpAddQuote(
+        uint256 amountMRX,
+        uint256 amountGMRX
+    ) external view returns (uint256 amountLP) {
+        amountLP = calculateLP(amountMRX, amountGMRX);
+    }
+
+    function lpRemoveQuote(
+        uint256 amountLP
+    ) external view returns (uint256 amountMRX, uint256 amountGMRX) {
+        uint256 reserveMRX = IERC20(mrx).balanceOf(address(this));
+        uint256 reserveGMRX = IERC20(gmrx).balanceOf(address(this));
+        uint256 totalSupply = IERC20(lp).totalSupply();
+        require(
+            totalSupply > 0,
+            "Pool: Total supply of LP must be greater than 0"
+        );
+
+        amountMRX = (amountLP * reserveMRX) / totalSupply;
+        amountGMRX = (amountLP * reserveGMRX) / totalSupply;
+    }
+
+    function lockLP(uint256 amountLP) external notCooldown {
+        require(amountLP > 0, "Pool: Amount of LP must be greater than 0");
+        require(
+            IERC20(lp).transferFrom(msg.sender, address(this), amountLP),
+            "Pool: Failed to transfer LGP-LP"
+        );
+        lockedLP[msg.sender] += amountLP;
+        totalLockedLP += amountLP;
+        lockCooldown[msg.sender] = block.number + 960;
+        emit LockedLiquidity(msg.sender, amountLP);
+    }
+
+    function unlockLP(uint256 amountLP) external notCooldown {
+        require(amountLP > 0, "Pool: Amount of LP must be greater than 0");
+        require(
+            lockedLP[msg.sender] >= amountLP,
+            "Pool: Amount exceeds currently locked LGP-LP"
+        );
+        lockedLP[msg.sender] -= amountLP;
+        totalLockedLP -= amountLP;
+        lockCooldown[msg.sender] = block.number + 960;
+        require(
+            IERC20(lp).transfer(msg.sender, amountLP),
+            "Pool: Failed to transfer gMRX"
+        );
+        emit UnlockedLiquidity(msg.sender, amountLP);
+    }
+
+    function burnAndRelease(
+        uint256 amountGMRX,
+        uint256 minimum,
+        bool unwrapMRX
+    ) external {
+        require(hasDiscount(msg.sender), "Pool: Lock LP or hodl g");
         require(amountGMRX > 0, "Pool: Amount must be greater than 0");
         uint256 totalSupply = IERC20(gmrx).totalSupply();
         uint256 reserveGMRX = IERC20(gmrx).balanceOf(address(this));
@@ -170,21 +260,16 @@ contract Pool {
             (reserveGMRX * 100) / totalSupply >= 50,
             "Pool: Reserve gMRX needs to be at least 50% of the totalSupply"
         );
-        uint256 amountMRX = amountGMRX *
-            (((reserveMRX * 1e8) / reserveGMRX) / 1e8);
-
-        uint256 oldPrice = ((reserveMRX * 1e8) / reserveGMRX) / 1e8;
-        uint256 newPrice = (((reserveMRX - amountMRX) * 1e8) / reserveGMRX) /
-            1e8;
-
-        uint256 slippageBasisPoints = newPrice > oldPrice
-            ? (newPrice - (oldPrice * 10000)) / 10000
-            : (oldPrice - (newPrice * 10000)) / 10000;
-
-        require(
-            slippageBasisPoints < 5000,
-            "Pool: Slippage tolerance exceeded 50%"
+        (uint256 amountMRX, uint256 basisPoints) = calculateSlippage(
+            gmrx,
+            mrx,
+            amountGMRX
         );
+        require(amountMRX >= minimum, "Pool: Output is below minimum");
+
+        require(amountMRX > 0, "Pool: Output MRX must be greater than 0");
+
+        require(basisPoints <= 5000, "Pool: Slippage tolerance exceeded 50%");
 
         require(
             IERC20(gmrx).transferFrom(msg.sender, address(this), amountGMRX),
@@ -192,24 +277,27 @@ contract Pool {
         );
         LiquidGovernorMRX(gmrx).burn(amountGMRX);
         if (unwrapMRX) {
-            WrappedMetrix((payable(mrx))).withdraw(amountMRX);
-            (bool sent, ) = payable(msg.sender).call{value: amountMRX}("");
+            WrappedMetrix((payable(mrx))).withdraw((amountMRX * 997) / 1000);
+            (bool sent, ) = payable(msg.sender).call{
+                value: (amountMRX * 997) / 1000
+            }("");
             require(sent, "Pool: Failed to remove MRX");
         } else {
             require(
-                IERC20(mrx).transfer(msg.sender, amountMRX),
+                IERC20(mrx).transfer(msg.sender, (amountMRX * 997) / 1000),
                 "Pool: Failed to remove wMRX"
             );
         }
-        emit BurnAndRelease(msg.sender, amountGMRX, amountMRX);
+        emit BurnAndRelease(msg.sender, amountGMRX, (amountMRX * 997) / 1000);
     }
 
     function addLiquidity(
         uint256 amountGMRX,
+        uint256 minimum,
         bool allowHighSlippage
     ) external payable {
         require(
-            msg.value > 1e8 && amountGMRX > 1e8,
+            msg.value >= 1e8 && amountGMRX >= 1e8,
             "Pool: Amounts must be greater than 1"
         );
         uint256 amountMRX = msg.value;
@@ -217,13 +305,73 @@ contract Pool {
         uint256 reserveMRX = IERC20(mrx).balanceOf(address(this));
         uint256 reserveGMRX = IERC20(gmrx).balanceOf(address(this));
 
-        uint256 oldPrice = ((reserveMRX * 1e8) / reserveGMRX) / 1e8;
-        uint256 newPrice = ((reserveMRX + amountMRX * 1e8) /
-            (reserveGMRX + amountGMRX)) / 1e8;
+        uint256 oldPrice = reserveGMRX > 0
+            ? (reserveMRX * 1e8) / reserveGMRX
+            : 1e8;
+        uint256 newPrice = ((reserveMRX + amountMRX) * 1e8) /
+            (reserveGMRX + amountGMRX);
 
         uint256 slippageBasisPoints = newPrice > oldPrice
-            ? (newPrice - (oldPrice * 10000)) / 10000
-            : (oldPrice - (newPrice * 10000)) / 10000;
+            ? ((newPrice - oldPrice) * 10000) / oldPrice
+            : ((oldPrice - newPrice) * 10000) / oldPrice;
+
+        require(
+            slippageBasisPoints <= 5000,
+            "Pool: Slippage tolerance exceeded 50%"
+        );
+
+        uint256 tradingFeeMRX = 0;
+        uint256 tradingFeeGMRX = 0;
+
+        if (slippageBasisPoints > 100) {
+            if (!allowHighSlippage) revert("Pool: Slippage tolerance exceeded");
+
+            tradingFeeMRX = (amountMRX * 3) / 1000; // 0.3% fee
+            tradingFeeGMRX = (amountMRX * 3) / 1000; // 0.3% fee
+        }
+
+        uint256 lpAmount = calculateLP(
+            amountMRX - tradingFeeMRX,
+            amountGMRX - tradingFeeGMRX
+        );
+        require(lpAmount >= minimum, "Pool: Output is below minimum");
+        require(lpAmount > 0, "Pool: Invalid resulting lpAmount");
+
+        // Transfer tokens to the contract
+        WrappedMetrix(payable(mrx)).deposit{value: amountMRX}();
+        require(
+            IERC20(gmrx).transferFrom(msg.sender, address(this), amountGMRX),
+            "Pool: Failed to transferFrom"
+        );
+
+        LiquidityProvider(lp).mint(msg.sender, lpAmount);
+
+        emit AddLiquidity(msg.sender, amountMRX, amountGMRX, lpAmount);
+    }
+
+    function addLiquidity(
+        uint256 amountMRX,
+        uint256 amountGMRX,
+        uint256 minimum,
+        bool allowHighSlippage
+    ) external {
+        require(
+            amountMRX > 1e8 && amountGMRX > 1e8,
+            "Pool: Amounts must be greater than 1"
+        );
+
+        uint256 reserveMRX = IERC20(mrx).balanceOf(address(this));
+        uint256 reserveGMRX = IERC20(gmrx).balanceOf(address(this));
+
+        uint256 oldPrice = reserveGMRX > 0
+            ? (reserveMRX * 1e8) / reserveGMRX
+            : 1e8;
+        uint256 newPrice = ((reserveMRX + amountMRX) * 1e8) /
+            (reserveGMRX + amountGMRX);
+
+        uint256 slippageBasisPoints = newPrice > oldPrice
+            ? ((newPrice - oldPrice) * 10000) / oldPrice
+            : ((oldPrice - newPrice) * 10000) / oldPrice;
 
         require(
             slippageBasisPoints <= 5000,
@@ -243,61 +391,7 @@ contract Pool {
             amountMRX - tradingFeeMRX,
             amountGMRX - tradingFeeGMRX
         );
-
-        require(lpAmount > 0, "Pool: Invalid resulting lpAmount");
-
-        // Transfer tokens to the contract
-        WrappedMetrix(payable(mrx)).deposit{value: amountMRX}();
-        require(
-            IERC20(gmrx).transferFrom(msg.sender, address(this), amountGMRX),
-            "Pool: Failed to transferFrom"
-        );
-
-        LiquidityProvider(lp).mint(msg.sender, lpAmount);
-
-        emit AddLiquidity(msg.sender, amountMRX, amountGMRX, lpAmount);
-    }
-
-    function addLiquidity(
-        uint256 amountMRX,
-        uint256 amountGMRX,
-        bool allowHighSlippage
-    ) external {
-        require(
-            amountMRX > 1e8 && amountGMRX > 1e8,
-            "Pool: Amounts must be greater than 1"
-        );
-
-        uint256 reserveMRX = IERC20(mrx).balanceOf(address(this));
-        uint256 reserveGMRX = IERC20(gmrx).balanceOf(address(this));
-
-        uint256 oldPrice = ((reserveMRX * 1e8) / reserveGMRX) / 1e8;
-        uint256 newPrice = (((reserveMRX + amountMRX) * 1e8) /
-            (reserveGMRX + amountGMRX)) / 1e8;
-
-        uint256 slippageBasisPoints = newPrice > oldPrice
-            ? (newPrice - (oldPrice * 10000)) / 10000
-            : (oldPrice - (newPrice * 10000)) / 10000;
-
-        require(
-            slippageBasisPoints < 5000,
-            "Pool: Slippage tolerance exceeded 50%"
-        );
-
-        uint256 tradingFeeMRX = 0;
-        uint256 tradingFeeGMRX = 0;
-
-        if (slippageBasisPoints > 100) {
-            if (!allowHighSlippage) revert("Pool: Slippage tolerance exceeded");
-            tradingFeeMRX = (amountMRX * 3) / 1000; // 0.3% fee
-            tradingFeeGMRX = (amountMRX * 3) / 1000; // 0.3% fee
-        }
-
-        uint256 lpAmount = calculateLP(
-            amountMRX - tradingFeeMRX,
-            amountGMRX - tradingFeeGMRX
-        );
-
+        require(lpAmount >= minimum, "Pool: Output is below minimum");
         require(lpAmount > 0, "Pool: Invalid resulting lpAmount");
         require(
             IERC20(mrx).transferFrom(msg.sender, address(this), amountMRX),
@@ -318,10 +412,16 @@ contract Pool {
         uint256 reserveMRX = IERC20(mrx).balanceOf(address(this));
         uint256 reserveGMRX = IERC20(gmrx).balanceOf(address(this));
         uint256 totalSupply = IERC20(lp).totalSupply();
-
+        require(
+            totalSupply > 0,
+            "Pool: Total supply of LP must be greater than 0"
+        );
         uint256 amountMRX = (lpAmount * reserveMRX) / totalSupply;
         uint256 amountGMRX = (lpAmount * reserveGMRX) / totalSupply;
-
+        require(
+            amountMRX > 0 && amountGMRX > 0,
+            "Pool: Outputs must be greater than 0"
+        );
         require(
             IERC20(lp).transferFrom(msg.sender, address(this), lpAmount),
             "Pool: Failed to transferFrom LPG-LP"
@@ -349,99 +449,129 @@ contract Pool {
         emit RemoveLiquidity(msg.sender, amountMRX, amountGMRX, lpAmount);
     }
 
-    function swapTokens(uint16 slippage) external payable {
-        require(slippage <= 5000, "Pool: Invalid slippage amount");
+    function swapTokens(uint256 minimum, uint16 slippage) external payable {
         WrappedMetrix(payable(mrx)).deposit{value: msg.value}();
-        uint256 output = calculateSwapAmount(msg.value, mrx, gmrx);
+        (uint256 output, uint256 basisPoints) = calculateSlippage(
+            mrx,
+            gmrx,
+            msg.value
+        );
+        require(output >= minimum, "Pool: Output is below minimum");
         require(output > 0, "Pool: Insufficient output amount");
-        uint256 reserveFrom = IERC20(mrx).balanceOf(address(this));
-        uint256 reserveTo = IERC20(gmrx).balanceOf(address(this));
 
-        uint256 oldPrice = ((reserveFrom * 1e8) / reserveTo) / 1e8;
-        uint256 newPrice = ((reserveFrom + msg.value * 1e8) /
-            (reserveTo - output)) / 1e8;
+        require(basisPoints <= slippage, "Pool: Slippage tolerance exceeded");
 
-        uint256 slippageBasisPoints = newPrice > oldPrice
-            ? (newPrice - (oldPrice * 10000)) / 10000
-            : (oldPrice - (newPrice * 10000)) / 10000;
-
+        require(basisPoints <= 5000, "Pool: Slippage tolerance exceeded 50%");
+        bool discount = hasDiscount(msg.sender);
         require(
-            slippageBasisPoints <= slippage,
-            "Pool: Slippage tolerance exceeded"
-        );
-
-        require(
-            slippageBasisPoints < 5000,
-            "Pool: Slippage tolerance exceeded 50%"
-        );
-
-        require(
-            IERC20(mrx).transferFrom(msg.sender, address(this), msg.value),
-            "Pool: Failed to transferFrom"
-        );
-        require(
-            IERC20(gmrx).transfer(msg.sender, (output * 997) / 1000),
+            IERC20(gmrx).transfer(
+                msg.sender,
+                discount ? output : (output * 997) / 1000
+            ),
             "Pool: Failed to transfer"
         );
-        emit Swap(msg.sender, mrx, gmrx, msg.value, (output * 997) / 1000);
+        emit Swap(
+            msg.sender,
+            mrx,
+            gmrx,
+            msg.value,
+            discount ? output : (output * 997) / 1000
+        );
     }
 
     function swapTokens(
         uint256 amount,
         address from,
         address to,
+        uint256 minimum,
         uint16 slippage,
         bool unwrapMRX
     ) external {
-        require(slippage <= 5000, "Pool: Invalid slippage amount");
-        uint256 output = calculateSwapAmount(amount, from, to);
+        (uint256 output, uint256 basisPoints) = calculateSlippage(
+            from,
+            to,
+            amount
+        );
+        require(output >= minimum, "Pool: Output is below minimum");
         require(output > 0, "Pool: Insufficient output amount");
-        uint256 reserveFrom = IERC20(from).balanceOf(address(this));
-        uint256 reserveTo = IERC20(to).balanceOf(address(this));
 
-        uint256 oldPrice = ((reserveFrom * 1e8) / reserveTo) / 1e8;
-        uint256 newPrice = ((reserveFrom + amount * 1e8) /
-            (reserveTo - output)) / 1e8;
+        require(basisPoints <= slippage, "Pool: Slippage tolerance exceeded");
 
-        uint256 slippageBasisPoints = newPrice > oldPrice
-            ? (newPrice - (oldPrice * 10000)) / 10000
-            : (oldPrice - (newPrice * 10000)) / 10000;
-
-        require(
-            slippageBasisPoints <= slippage,
-            "Pool: Slippage tolerance exceeded"
-        );
-
-        require(
-            slippageBasisPoints < 5000,
-            "Pool: Slippage tolerance exceeded 50%"
-        );
+        require(basisPoints < 5000, "Pool: Slippage tolerance exceeded 50%");
         require(
             IERC20(from).transferFrom(msg.sender, address(this), amount),
             "Pool: Failed to transferFrom"
         );
+        bool discount = hasDiscount(msg.sender);
+
         if (to == mrx && unwrapMRX) {
-            WrappedMetrix((payable(mrx))).withdraw((output * 997) / 1000);
+            WrappedMetrix((payable(mrx))).withdraw(
+                discount ? output : (output * 997) / 1000
+            );
 
             (bool sent, ) = payable(msg.sender).call{
-                value: (output * 997) / 1000
+                value: discount ? output : (output * 997) / 1000
             }("");
 
             require(sent, "Pool: Failed to transfer");
         } else {
             require(
-                IERC20(to).transfer(msg.sender, (output * 997) / 1000),
+                IERC20(to).transfer(
+                    msg.sender,
+                    discount ? output : (output * 997) / 1000
+                ),
                 "Pool: Failed to transfer"
             );
         }
 
-        emit Swap(msg.sender, mrx, gmrx, amount, (output * 997) / 1000);
+        emit Swap(
+            msg.sender,
+            mrx,
+            gmrx,
+            amount,
+            discount ? output : (output * 997) / 1000
+        );
+    }
+
+    function hasDiscount(address trader) internal view returns (bool discount) {
+        uint256 traderLockedLP = lockedLP[trader];
+        uint256 totalSupply = IERC20(lp).totalSupply();
+        uint256 gBalance = IERC721(g).balanceOf(trader);
+        discount =
+            (
+                totalSupply > 0
+                    ? (traderLockedLP * 10000) / totalSupply >= 100
+                    : false
+            ) ||
+            gBalance > 0; // trader has locked at least 1% of the totalSupply of LGP-LP // trader holds g
+    }
+
+    function calculateSlippage(
+        address from,
+        address to,
+        uint256 amount
+    ) internal view returns (uint256 output, uint256 basisPoints) {
+        (
+            uint256 reserveFrom,
+            uint256 reserveTo,
+            uint256 out
+        ) = calculateSwapAmount(amount, from, to);
+        output = out;
+
+        uint256 oldPrice = (reserveFrom * 1e8) / reserveTo;
+        uint256 newPrice = reserveTo <= output
+            ? 0
+            : ((reserveFrom + amount) * 1e8) / (reserveTo - output);
+
+        basisPoints = newPrice > oldPrice
+            ? ((newPrice - oldPrice) * 10000) / oldPrice
+            : ((oldPrice - newPrice) * 10000) / oldPrice;
     }
 
     function calculateLP(
         uint256 amountMRX,
         uint256 amountGMRX
-    ) internal view returns (uint256) {
+    ) internal view returns (uint256 amountLP) {
         uint256 totalSupply = IERC20(lp).totalSupply();
 
         uint256 reserveMRX = IERC20(mrx).balanceOf(address(this));
@@ -453,32 +583,33 @@ contract Pool {
         uint256 sqrtK = Math.sqrt(newReserveMRX * newReserveGMRX);
 
         if (totalSupply == 0) {
-            return sqrtK; // Initial LP tokens based on sqrt of product
+            amountLP = sqrtK; // Initial LP tokens based on sqrt of product
+        } else {
+            uint256 currentK = Math.sqrt(reserveMRX * reserveGMRX);
+            amountLP = (totalSupply * (sqrtK - currentK)) / currentK;
         }
-
-        uint256 currentK = Math.sqrt(reserveMRX * reserveGMRX);
-        uint256 lpAmount = (totalSupply * (sqrtK - currentK)) / currentK;
-
-        return lpAmount;
     }
 
     function calculateSwapAmount(
         uint256 amountIn,
         address from,
         address to
-    ) internal view returns (uint256) {
+    )
+        internal
+        view
+        returns (uint256 reserveFrom, uint256 reserveTo, uint256 amountOut)
+    {
         require(amountIn > 0, "Pool: Amount must be greater than 0");
         require(from != to, "Pool: Same token swap not supported");
         require(from == mrx || from == gmrx, "Pool: Invalid fromToken");
         require(to == mrx || to == gmrx, "Pool: Invalid toToken");
 
-        uint256 balanceFrom = IERC20(from).balanceOf(address(this));
-        uint256 balanceTo = IERC20(to).balanceOf(address(this));
-        require(balanceFrom > 0 && balanceTo > 0, "Pool: Empty pool");
-        // Apply a 0.3% trading fee into the pool for providers
-        uint256 amountOut = (amountIn * balanceTo * 997) /
-            (balanceFrom * 1000 + amountIn * 997);
-        return amountOut;
+        reserveFrom = IERC20(from).balanceOf(address(this));
+        reserveTo = IERC20(to).balanceOf(address(this));
+
+        require(reserveFrom > 0 && reserveTo > 0, "Pool: Empty pool");
+
+        amountOut = (amountIn * 1e8) / ((reserveFrom * 1e8) / reserveTo);
     }
 }
 ```

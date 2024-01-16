@@ -27,7 +27,7 @@ $$
 \begin{align*}
     \text{newReserveMRX} &= \text{reserveMRX} + \text{amountMRX} \\
     \text{newReserveGMRX} &= \text{reserveGMRX} + \text{amountGMRX} \\
-    \text{sqrtK} &= \sqrt{\text{newReserveMRX} \times \text{newReserveGMRX}} \\
+    \text{sqrtK} &= \sqrt{\text{newReserveMRX} \times \text{newReserveGMRX}} \\~\\
     \text{lpAmount} &=
     \begin{cases}
         \text{sqrtK}, & \text{if } \text{totalSupply} = 0 \\
@@ -42,9 +42,13 @@ $$
 
 The redemption rate for <Highlight color="#bf96c6">**LGP-LP**</Highlight> is based on the current reserves of <Highlight color="#bf96c6">**wMRX**</Highlight> and <Highlight color="#bf96c6">**gMRX**</Highlight> as well as the total supply of <Highlight color="#bf96c6">**LGP-LP**</Highlight> tokens.
 
-$\large\text{amountMRX} =  \frac{{\text{amountLP} \times \text{poolMRX}}}{{\text{totalSupplyLP}}}$
+$$
+\large\text{amountMRX} =  \frac{{\text{amountLP} \times \text{poolMRX}}}{{\text{totalSupplyLP}}}
+$$
 
-$\large\text{amountGMRX} = \frac{{\text{amountLP} \times \text{poolGMRX}}}{{\text{totalSupplyLP}}}$
+$$
+\large\text{amountGMRX} = \frac{{\text{amountLP} \times \text{poolGMRX}}}{{\text{totalSupplyLP}}}
+$$
 
 ## Token Details
 
@@ -61,7 +65,7 @@ $\large\text{amountGMRX} = \frac{{\text{amountLP} \times \text{poolGMRX}}}{{\tex
 
 ### Sourcecode
 
-```js
+```sol
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
@@ -72,7 +76,7 @@ import "@metrixnames/mns-contracts/contracts/registry/MNS.sol";
 import "@metrixnames/mns-contracts/contracts/registry/ReverseRegistrar.sol";
 
 contract LiquidityProvider is ERC20, ERC20Burnable, Ownable {
-    constructor(address _mns) ERC20("LiquidGovernance-LP", "LG-LP") {
+    constructor(address _mns) ERC20("LiquidGovernance-LP", "LGP-LP") {
         ReverseRegistrar registrar = ReverseRegistrar(
             MNS(_mns).owner(ADDR_REVERSE_NODE)
         );

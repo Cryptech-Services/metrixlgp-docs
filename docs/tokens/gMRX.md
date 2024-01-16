@@ -38,7 +38,9 @@ Flash loans can be utilized to mint gMRX so long as the loan and the 1% fee are 
 
 The rate of this redemption is calculated based on the amount of <Highlight color="#bf96c6">**gMRX**</Highlight> and <Highlight color="#bf96c6">**wMRX**</Highlight> liquidity available in the liquidity pool. Optionally <Highlight color="#bf96c6">**MRX**</Highlight> can be unwrapped to <Highlight color="#bf96c6">**MRX**</Highlight> during the burn.
 
-$\large\text{amountMRX} = \text{burnGMRX} \times \frac{{\text{poolMRX}}}{{\text{poolGMRX}}}$
+$$
+\text{amountMRX} = \text{burnGMRX} \times \frac{{\text{poolMRX}}}{{\text{poolGMRX}}}
+$$
 
 ## Providing Liquidity
 
@@ -50,11 +52,19 @@ The rate of <Highlight color="#bf96c6">**LGP-LP**</Highlight> tokens issued for 
 
 If the pool is empty, the rate is based on the square root of the product.
 
-$\large\text{amountLP} = \sqrt{\text{newBalanceMRX} \times \text{newBalanceGMRX}}$
+$$
+\text{amountLP} = \sqrt{\text{newBalanceMRX} \times \text{newBalanceGMRX}}
+$$
 
 If the pool is not empty, the rate is based on the total supply of <Highlight color="#bf96c6">**LGP-LP**</Highlight> and the amount of <Highlight color="#bf96c6">**gMRX**</Highlight> and <Highlight color="#bf96c6">**wMRX**</Highlight> in the pool.
 
-$\large\text{amountLP} = \frac{{\text{totalSupply} \times \left(\sqrt{\text{newBalanceMRX} \times \text{newBalanceGMRX}} - \sqrt{\text{balanceMRX} \times \text{balanceGMRX}}\right)}}{\sqrt{\text{balanceMRX} \times \text{balanceGMRX}}}$
+$$
+\begin{align*}
+\text{sqrtK} = \sqrt{\text{newBalanceMRX} \times \text{newBalanceGMRX}} \\~\\
+\text{currentK} = \sqrt{\text{balanceMRX} \times \text{balanceGMRX}} \\~\\
+\text{amountLP} = \frac{{\text{totalSupply} \times \left(\text{sqrtK} - \text{currentK}\right)}}{\text{currentK}}
+\end{align*}
+$$
 
 ## Trading
 
@@ -75,7 +85,7 @@ $\large\text{amountLP} = \frac{{\text{totalSupply} \times \left(\sqrt{\text{newB
 
 ### Sourcecode
 
-```js
+```sol
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
@@ -92,7 +102,7 @@ contract LiquidGovernorMRX is ERC20, ERC20Burnable, Ownable, ERC20FlashMint {
         ReverseRegistrar registrar = ReverseRegistrar(
             mns.owner(ADDR_REVERSE_NODE)
         );
-        registrar.setName("Metrix LGP:Liquid Governor MRX (gMRX)");
+        registrar.setName("Metrix LGP:Liquid Governor Metrix (gMRX)");
     }
 
     function mint(address to, uint256 amount) public onlyOwner {
