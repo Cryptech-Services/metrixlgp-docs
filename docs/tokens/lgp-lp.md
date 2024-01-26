@@ -14,6 +14,16 @@ style={{color}}>
 
 A token for liquidity providers which can be redeemed for the liquidity.
 
+:::tip
+
+## Trading Fee Waiver For LP Locks
+
+<Highlight color="#bf96c6">**LGP-LP**</Highlight> can be locked or unlocked in the liquidity pool. Liquidity locking actions have a cooldown of 960 blocks, roughly 24 hours.
+
+When an address has locked at least `1%` of the total supply of <Highlight color="#bf96c6">**LGP-LP**</Highlight> they will become exempt from trading fees for swaps.
+
+:::
+
 ## Issuance
 
 LGP-LP is minted when <Highlight color="#bf96c6">**wMRX**</Highlight> and <Highlight color="#bf96c6">**gMRX**</Highlight> are added to the liquidity pool. Whenever a liquidity provider wants to exit their position, they can be redeemed for the underlying <Highlight color="#bf96c6">**wMRX**</Highlight> and <Highlight color="#bf96c6">**gMRX**</Highlight> in the liquidity pool.
@@ -60,7 +70,7 @@ $$
 
 ### Contract Address
 
-- **`TestNet`** - [**`0000000000000000000000000000000000000000`**](https://testnet-explorer.metrixcoin.com/contract/0000000000000000000000000000000000000000)
+- **`TestNet`** - [**`e786c947bdee4d4d30b5720aa1c470582c4b3132`**](https://testnet-explorer.metrixcoin.com/contract/e786c947bdee4d4d30b5720aa1c470582c4b3132)
 - **`MainNet`** - [**`0000000000000000000000000000000000000000`**](https://explorer.metrixcoin.com/contract/0000000000000000000000000000000000000000)
 
 ### Sourcecode

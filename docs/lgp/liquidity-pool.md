@@ -73,7 +73,7 @@ $\large\text{amountMRX} = \text{burnGMRX} \times \frac{{\text{poolMRX}}}{{\text{
 
 ### Contract Address
 
-- **`TestNet`** - [**`0000000000000000000000000000000000000000`**](https://testnet-explorer.metrixcoin.com/contract/0000000000000000000000000000000000000000)
+- **`TestNet`** - [**`ca5cadab4857c8507be486a04cd4e196dd989075`**](https://testnet-explorer.metrixcoin.com/contract/ca5cadab4857c8507be486a04cd4e196dd989075)
 - **`MainNet`** - [**`0000000000000000000000000000000000000000`**](https://explorer.metrixcoin.com/contract/0000000000000000000000000000000000000000)
 
 ### Sourcecode
@@ -118,8 +118,8 @@ contract Pool {
 
     event Swap(
         address indexed sender,
-        address from,
-        address to,
+        address indexed from,
+        address indexed to,
         uint256 amountFrom,
         uint256 amountTo
     );
@@ -526,8 +526,8 @@ contract Pool {
 
         emit Swap(
             msg.sender,
-            mrx,
-            gmrx,
+            from,
+            to,
             amount,
             discount ? output : (output * 997) / 1000
         );

@@ -32,7 +32,7 @@ The LiquidGovernance handles all incoming funds and routes `20%` of rewards from
 
 ### Contract Address
 
-- **`TestNet`** - [**`0000000000000000000000000000000000000000`**](https://testnet-explorer.metrixcoin.com/contract/0000000000000000000000000000000000000000)
+- **`TestNet`** - [**`490db059bf60321e2d8c611c12dac1028dda3438`**](https://testnet-explorer.metrixcoin.com/contract/490db059bf60321e2d8c611c12dac1028dda3438)
 - **`MainNet`** - [**`0000000000000000000000000000000000000000`**](https://explorer.metrixcoin.com/contract/0000000000000000000000000000000000000000)
 
 ### Sourcecode
