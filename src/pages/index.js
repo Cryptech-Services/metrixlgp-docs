@@ -28,7 +28,7 @@ function HomepageHeader() {
 
 export default function Home() {
   return (
-    <Layout description='Description will go into a meta tag in <head />'>
+    <Layout description='Creating liquid gMRX from locked MRX collateral'>
       <HomepageHeader />
       <main>
         <HomepageFeatures />
