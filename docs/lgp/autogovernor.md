@@ -20,7 +20,7 @@ AutoGovernors do away with the need to directly participate by automatically cal
 
 ## Usage in the Metrix LGP
 
-In the case of the Metrix LGP, the LiquidGovernance contract is the owner of every AutoGovernor enrolled through it. The LiquidGovernance contract allows the owner of a specific <Highlight color="#bf96c6">**g**</Highlight> token authority over the AutoGovernor. When rewards are received by the LiquidGovernance contract they are distribued a 20% to the <Highlight color="#bf96c6">**g**</Highlight> token holder abd 80% to the Metrix LGP liquidity pool.
+In the case of the Metrix LGP, the LiquidGovernance contract is the owner of every AutoGovernor enrolled through it. The LiquidGovernance contract allows the owner of a specific <Highlight color="#bf96c6">**g**</Highlight> token authority over the AutoGovernor. When rewards are received by the LiquidGovernance contract they are distribued a `20%` to the <Highlight color="#bf96c6">**g**</Highlight> token holder and `80%` to the Metrix LGP liquidity pool.
 
 ## Contract Details
 
