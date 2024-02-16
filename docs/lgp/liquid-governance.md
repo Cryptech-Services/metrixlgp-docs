@@ -65,7 +65,7 @@ contract LiquidGovernance is IAutoGovernorFactory {
         mrx = _mrx;
         address _g = address(new Gov(_mns));
         g = _g;
-        pool = address(new Pool(_mrx, _gmrx, _mns, _g));
+        pool = address(new Pool(_mrx, _gmrx, _g, _mns));
         mns = _mns;
         ReverseRegistrar registrar = ReverseRegistrar(
             MNS(mns).owner(ADDR_REVERSE_NODE)
@@ -76,9 +76,9 @@ contract LiquidGovernance is IAutoGovernorFactory {
     modifier onlyHolder(address autoGovernor) {
         uint256 tokenId = uint256(uint160(autoGovernor));
         try Gov(g).ownerOf(tokenId) returns (address owner) {
-            require(msg.sender == owner, "Only executable by the holder");
+            require(msg.sender == owner, "LiquidGovernance: Only executable by the holder");
         } catch {
-            revert("Token does not exist");
+            revert("LiquidGovernance: Token does not exist");
         }
         _;
     }

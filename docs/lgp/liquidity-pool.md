@@ -67,7 +67,7 @@ $\large\text{amountMRX} = \text{burnGMRX} \times \frac{{\text{poolMRX}}}{{\text{
 - **The reserves of <Highlight color="#bf96c6">gMRX</Highlight> and <Highlight color="#bf96c6">wMRX</Highlight> in the pool must be greater than 0**
 - **The reserves of <Highlight color="#bf96c6">gMRX</Highlight> and <Highlight color="#bf96c6">wMRX</Highlight> must be greater than the amount burned**
 - **The pool must contain at least `50%` of the total supply of <Highlight color="#bf96c6">gMRX</Highlight>**
-- **More than `50%` slippage cannot be exceeded in the burning of the <Highlight color="#bf96c6">gMRX</Highlight>**
+- **More than `25%` slippage cannot be exceeded in the burning of the <Highlight color="#bf96c6">gMRX</Highlight>**
 
 ## Contract Details
 
@@ -214,7 +214,7 @@ contract Pool {
         require(amountLP > 0, "Pool: Amount of LP must be greater than 0");
         require(
             IERC20(lp).transferFrom(msg.sender, address(this), amountLP),
-            "Pool: Failed to transfer LGP-LP"
+            "Pool: Failed to transferFrom LGP-LP"
         );
         lockedLP[msg.sender] += amountLP;
         totalLockedLP += amountLP;
@@ -233,7 +233,7 @@ contract Pool {
         lockCooldown[msg.sender] = block.number + 960;
         require(
             IERC20(lp).transfer(msg.sender, amountLP),
-            "Pool: Failed to transfer gMRX"
+            "Pool: Failed to transfer LGP-LP"
         );
         emit UnlockedLiquidity(msg.sender, amountLP);
     }
@@ -254,7 +254,7 @@ contract Pool {
         );
         require(
             reserveGMRX >= amountGMRX && reserveMRX >= amountGMRX,
-            "Pool: Burn amount must be less than or equal pooled gMRX and MRX"
+            "Pool: Burn amount must be less than or equal pooled gMRX and wMRX"
         );
         require(
             (reserveGMRX * 100) / totalSupply >= 50,
@@ -269,11 +269,11 @@ contract Pool {
 
         require(amountMRX > 0, "Pool: Output MRX must be greater than 0");
 
-        require(basisPoints <= 5000, "Pool: Slippage tolerance exceeded 50%");
+        require(basisPoints <= 5000, "Pool: Slippage exceeded 25%");
 
         require(
             IERC20(gmrx).transferFrom(msg.sender, address(this), amountGMRX),
-            "Pool: Failed to transfer gMRX"
+            "Pool: Failed to transferFrom gMRX"
         );
         LiquidGovernorMRX(gmrx).burn(amountGMRX);
         if (unwrapMRX) {
@@ -317,7 +317,7 @@ contract Pool {
 
         require(
             slippageBasisPoints <= 5000,
-            "Pool: Slippage tolerance exceeded 50%"
+            "Pool: Slippage exceeded 50%"
         );
 
         uint256 tradingFeeMRX = 0;
@@ -341,7 +341,7 @@ contract Pool {
         WrappedMetrix(payable(mrx)).deposit{value: amountMRX}();
         require(
             IERC20(gmrx).transferFrom(msg.sender, address(this), amountGMRX),
-            "Pool: Failed to transferFrom"
+            "Pool: Failed to transferFrom gMRX"
         );
 
         LiquidityProvider(lp).mint(msg.sender, lpAmount);
@@ -375,7 +375,7 @@ contract Pool {
 
         require(
             slippageBasisPoints <= 5000,
-            "Pool: Slippage tolerance exceeded 50%"
+            "Pool: Slippage exceeded 50%"
         );
 
         uint256 tradingFeeMRX = 0;
@@ -395,7 +395,7 @@ contract Pool {
         require(lpAmount > 0, "Pool: Invalid resulting lpAmount");
         require(
             IERC20(mrx).transferFrom(msg.sender, address(this), amountMRX),
-            "Pool: Failed to transferFrom MRX"
+            "Pool: Failed to transferFrom wMRX"
         );
         require(
             IERC20(gmrx).transferFrom(msg.sender, address(this), amountGMRX),
@@ -407,14 +407,14 @@ contract Pool {
     }
 
     function removeLiquidity(uint256 lpAmount, bool unwrapMRX) external {
-        require(lpAmount > 0, "Pool: Amount must be greater than 0");
+        require(lpAmount > 0, "Pool: Amount of LGP-LP must be greater than 0");
 
         uint256 reserveMRX = IERC20(mrx).balanceOf(address(this));
         uint256 reserveGMRX = IERC20(gmrx).balanceOf(address(this));
         uint256 totalSupply = IERC20(lp).totalSupply();
         require(
             totalSupply > 0,
-            "Pool: Total supply of LP must be greater than 0"
+            "Pool: Total supply of LGP-LP must be greater than 0"
         );
         uint256 amountMRX = (lpAmount * reserveMRX) / totalSupply;
         uint256 amountGMRX = (lpAmount * reserveGMRX) / totalSupply;
@@ -461,7 +461,7 @@ contract Pool {
 
         require(basisPoints <= slippage, "Pool: Slippage tolerance exceeded");
 
-        require(basisPoints <= 5000, "Pool: Slippage tolerance exceeded 50%");
+        require(basisPoints <= 5000, "Pool: Slippage exceeded 50%");
         bool discount = hasDiscount(msg.sender);
         require(
             IERC20(gmrx).transfer(
@@ -497,7 +497,7 @@ contract Pool {
 
         require(basisPoints <= slippage, "Pool: Slippage tolerance exceeded");
 
-        require(basisPoints < 5000, "Pool: Slippage tolerance exceeded 50%");
+        require(basisPoints < 5000, "Pool: Slippage exceeded 50%");
         require(
             IERC20(from).transferFrom(msg.sender, address(this), amount),
             "Pool: Failed to transferFrom"
