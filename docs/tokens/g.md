@@ -52,6 +52,7 @@ pragma solidity ^0.8.7;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@metrixnames/mns-contracts/contracts/registry/MNS.sol";
 import "@metrixnames/mns-contracts/contracts/registry/ReverseRegistrar.sol";
@@ -67,6 +68,20 @@ contract Gov is ERC721, ERC721Enumerable, ERC721Burnable, Ownable {
 
     function safeMint(address to, uint256 tokenId) public onlyOwner {
         _safeMint(to, tokenId);
+    }
+
+    function tokenURI(
+        uint256 tokenId
+    ) public view virtual override returns (string memory) {
+        _requireMinted(tokenId);
+        string memory json = string(
+            abi.encodePacked(
+                '{"description": "A Metrix LGP Gov Token", "image": "ipfs://bafkreiaxuxvocyozr7c7cxndazu6ciwgsz3d6zwubr6p72fuzfqsc2jaoy", "attributes": [{"trait_type": "auto_governor", "value": "',
+                Strings.toHexString(address(uint160(tokenId))),
+                '"}]}'
+            )
+        );
+        return json;
     }
 
     // The following functions are overrides required by Solidity.
