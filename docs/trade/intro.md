@@ -26,8 +26,20 @@ Trading fees for swaps are **completely waived** for any liquidity provider with
 
 :::
 
-## Trading wMRX and gMRX
+## Trading <Highlight color="#bf96c6">MRX</Highlight> or <Highlight color="#bf96c6">wMRX</Highlight> and <Highlight color="#bf96c6">gMRX</Highlight>
 
-### Buying gMRX
+|                                                       Buying <Highlight color="#bf96c6">gMRX</Highlight>                                                       |                                                   Selling <Highlight color="#bf96c6">MRX</Highlight>                                                   |
+| :------------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------: |
+|                                                            ![Swap form buy](/img/swap-form-buy.png)                                                            |                                                       ![Swap form sell](/img/swap-form-sell.png)                                                       |
+| <Highlight color="#bf96c6">gMRX</Highlight> can be bought with <Highlight color="#bf96c6">wMRX</Highlight> or with <Highlight color="#bf96c6">MRX</Highlight>. | <Highlight color="#bf96c6">gMRX</Highlight> can be sold for <Highlight color="#bf96c6">wMRX</Highlight> or <Highlight color="#bf96c6">MRX</Highlight>. |
+|                                                                                                                                                                |
 
-### Selling gMRX
+### Slippage Tolerance
+
+The slippage tolerance is how much price impact, and potentially purchasing power impact that can be allowed by the trade. This account setting is used to calculate the minimum output amount as well as impact allowed from the trade. The maximimum slippage tolerance allowed is `50%`.
+
+### Using <Highlight color="#bf96c6">wMRX</Highlight> or <Highlight color="#bf96c6">MRX</Highlight>
+
+![Automatically wrap or unwrap](/img/wrap-unwrap-icon.png)
+
+The input or output can be set to either <Highlight color="#bf96c6">wMRX</Highlight> or <Highlight color="#bf96c6">MRX</Highlight> by using the switch icon.

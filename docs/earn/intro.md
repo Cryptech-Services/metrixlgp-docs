@@ -37,3 +37,17 @@ Flash loan fees from loans of <Highlight color="#bf96c6">**gMRX**</Highlight> ha
 ### AutoGovernor Rewards
 
 `80%` of the rewards from each of the AutoGovernors is automatically injected into the pool every 1920 blocks, roughly every 2 days, with `20%` of the reward going to the respective <Highlight color="#bf96c6">**g**</Highlight> hodler.
+
+:::tip
+
+## Trading Fee Waiver
+
+Trading fees for swaps are **completely waived** for any liquidity provider with at least **`1%`** of the total supply of the <Highlight color="#bf96c6">**LGP-LP**</Highlight> token locked and for every <Highlight color="#bf96c6">**g**</Highlight> token hodler.
+
+### How to Qualify
+
+- **Hodl one or more <Highlight color="#bf96c6">g</Highlight>** tokens
+
+- **Lock >= `1%` <Highlight color="#bf96c6">LGP-LP</Highlight> total supply**
+
+:::
