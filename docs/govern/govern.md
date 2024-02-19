@@ -12,7 +12,7 @@ style={{color}}>
 
 # Governing
 
-Holders of Gov token may participate in the MetrixCoin DGP.
+Holders of <Highlight color="#bf96c6">**Gov**</Highlight> token may participate in the MetrixCoin DGP.
 
 ## DGP Proposals
 
@@ -32,7 +32,7 @@ Budget proposals allow the MetrixCoin governors to decide on how the monthly MRX
 
 ### Creating
 
-Budget proposals can be created at any time so long as the proposal fee (currently 600k MRX) is paid. Budget proposals created through the LGP are injected into the built in liquidity pool at the same rewards rate with `20%` going to the Gov token holder and `80%` going to the built in liquidity pool. This allows proposers to reclaim their budget fee in the case that it passes.
+Budget proposals can be created at any time so long as the proposal fee (currently 600k <Highlight color="#bf96c6">**MRX**</Highlight>) is paid. Budget proposals created through the LGP are injected into the built in liquidity pool at the same rewards rate with `20%` going to the Gov token holder and `80%` going to the built in liquidity pool. This allows proposers to reclaim their budget fee in the case that it passes.
 
 ### Voting
 
