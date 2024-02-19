@@ -3,9 +3,16 @@ sidebar_position: 3
 title: Governing
 ---
 
+export const Highlight = ({children, color}) => (
+<span
+style={{color}}>
+{children}
+</span>
+);
+
 # Governing
 
-Holders of <Highlight color="#bf96c6">**Gov**</Highlight> token may participate in the MetrixCoin DGP.
+Holders of Gov token may participate in the MetrixCoin DGP.
 
 ## DGP Proposals
 
