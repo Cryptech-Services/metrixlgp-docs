@@ -5,7 +5,7 @@ title: Governing
 
 # Governing
 
-Holders of Gov token may participate in the MetrixCoin DGP.
+Holders of <Highlight color="#bf96c6">**Gov**</Highlight> token may participate in the MetrixCoin DGP.
 
 ## DGP Proposals
 

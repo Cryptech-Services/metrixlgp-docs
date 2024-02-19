@@ -33,3 +33,22 @@ The <Highlight color="#bf96c6">**gMRX**</Highlight> token are used to allow the 
 A built in liquidity pool is built into the protocol so that <Highlight color="#bf96c6">**gMRX**</Highlight> and <Highlight color="#bf96c6">**MRX**</Highlight> can be freely traded as long as there is liquidity provided to the pool. Trades have a `0.3%` trading fee applied to the output token, which goes directly into the liquidity pool as an incentive for providers. Additionally `80%` of the Metrix DGP rewards for each AutoGovernor within the protocol is injected into the pool every 1920 blocks, or roughly 2 days.
 
 The liquidity pool has a built in burn mechanism meant to deflate the supply of <Highlight color="#bf96c6">**gMRX**</Highlight> over time. Allowing burning of <Highlight color="#bf96c6">**gMRX**</Highlight> at the current exchange rate in exchange for <Highlight color="#bf96c6">**wMRX**</Highlight> held within the pool.
+
+:::info
+
+## There is NO customer support for Metrix LGP.
+
+**If you're experiencing issues,**
+
+- First check the [troubleshooting page](/troubleshooting) for your error code and possible solutions.
+- If you can't find a solution, try reaching out in the [MetrixCoin Discord](https://discord.com/invite/drp7Rc6NMB).
+
+:::
+
+:::warning
+Admins will **NEVER** send you a direct message. If anybody approaches you directly on e.g. Discord pretending to represent customer support, please block them and report as spam.
+:::
+
+:::warning
+**NEVER**, under any situation, should you ever give someone your private key or recovery phrases. Immediately block and report anyone that asks for them.
+:::

@@ -10,6 +10,25 @@ style={{color}}>
 </span>
 );
 
+:::info
+
+## There is NO customer support for Metrix LGP.
+
+**If you're experiencing issues,**
+
+- First check the [troubleshooting page](/troubleshooting) for your error code and possible solutions.
+- If you can't find a solution, try reaching out in the [MetrixCoin Discord](https://discord.com/invite/drp7Rc6NMB).
+
+:::
+
+:::warning
+Admins will **NEVER** send you a direct message. If anybody approaches you directly on e.g. Discord pretending to represent customer support, please block them and report as spam.
+:::
+
+:::warning
+**NEVER**, under any situation, should you ever give someone your private key or recovery phrases. Immediately block and report anyone that asks for them.
+:::
+
 ## General
 
 | Revert Message | Description                                                          | Solution                      |
