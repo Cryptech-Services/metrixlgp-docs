@@ -41,7 +41,7 @@ A **20% royalty is taken from every AutoGovernor reward** which corresponds to t
 ### Contract Address
 
 - **`TestNet`** - [**`3805f45101c97b5823c59e37fadb538b193010d7`**](https://testnet-explorer.metrixcoin.com/contract/3805f45101c97b5823c59e37fadb538b193010d7)
-- **`MainNet`** - [**`0000000000000000000000000000000000000000`**](https://explorer.metrixcoin.com/contract/0000000000000000000000000000000000000000)
+- **`MainNet`** - [**`c15ce7d17cf8b6c85d998d1d2bc81133fbfffdc4`**](https://explorer.metrixcoin.com/contract/c15ce7d17cf8b6c85d998d1d2bc81133fbfffdc4)
 
 ### Sourcecode
 

@@ -74,7 +74,7 @@ $\large\text{amountMRX} = \text{burnGMRX} \times \frac{{\text{poolMRX}}}{{\text{
 ### Contract Address
 
 - **`TestNet`** - [**`ca5cadab4857c8507be486a04cd4e196dd989075`**](https://testnet-explorer.metrixcoin.com/contract/ca5cadab4857c8507be486a04cd4e196dd989075)
-- **`MainNet`** - [**`0000000000000000000000000000000000000000`**](https://explorer.metrixcoin.com/contract/0000000000000000000000000000000000000000)
+- **`MainNet`** - [**`86736225a67a42007000d4bb154d8a7583fc2c5d`**](https://explorer.metrixcoin.com/contract/86736225a67a42007000d4bb154d8a7583fc2c5d)
 
 ### Sourcecode
 

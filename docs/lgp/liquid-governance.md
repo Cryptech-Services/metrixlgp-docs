@@ -33,7 +33,7 @@ The LiquidGovernance handles all incoming funds and routes `20%` of rewards from
 ### Contract Address
 
 - **`TestNet`** - [**`490db059bf60321e2d8c611c12dac1028dda3438`**](https://testnet-explorer.metrixcoin.com/contract/490db059bf60321e2d8c611c12dac1028dda3438)
-- **`MainNet`** - [**`0000000000000000000000000000000000000000`**](https://explorer.metrixcoin.com/contract/0000000000000000000000000000000000000000)
+- **`MainNet`** - [**`614554e34dfb2b4e7383dcab7e0c40ae37910771`**](https://explorer.metrixcoin.com/contract/614554e34dfb2b4e7383dcab7e0c40ae37910771)
 
 ### Sourcecode
 
@@ -191,6 +191,7 @@ contract LiquidGovernance is IAutoGovernorFactory {
         );
         AutoGovernor governor = AutoGovernor(payable(governorAddress));
         governor.ping();
+        emit Pinged(governorAddress);
     }
 
     function unenroll(
@@ -204,6 +205,7 @@ contract LiquidGovernance is IAutoGovernorFactory {
         Gov(g).burn(uint256(uint160(governorAddress)));
         AutoGovernor governor = AutoGovernor(payable(governorAddress));
         governor.unenroll(false);
+        emit GovernorUnenrolled(governorAddress);
     }
 
     function startProposal(
@@ -226,6 +228,7 @@ contract LiquidGovernance is IAutoGovernorFactory {
             requested,
             duration
         );
+        emit ProposalStarted(governorAddress);
     }
 
     function voteForProposal(
@@ -239,6 +242,7 @@ contract LiquidGovernance is IAutoGovernorFactory {
         );
         AutoGovernor governor = AutoGovernor(payable(governorAddress));
         governor.voteForProposal(proposalId, vote);
+        emit ProposalVoted(governorAddress, proposalId);
     }
 
     function addProposal(
@@ -252,6 +256,7 @@ contract LiquidGovernance is IAutoGovernorFactory {
         );
         AutoGovernor governor = AutoGovernor(payable(governorAddress));
         governor.addProposal(proposalType, proposalAddress);
+        emit ProposalAdded(governorAddress, proposalType, proposalAddress);
     }
 }
 ```

@@ -81,7 +81,7 @@ $$
 ### Contract Address
 
 - **`TestNet`** - [**`5a7a1c8a3dc11fdbc86a3ca8ae6ccf1cb601c662`**](https://testnet-explorer.metrixcoin.com/contract/5a7a1c8a3dc11fdbc86a3ca8ae6ccf1cb601c662)
-- **`MainNet`** - [**`0000000000000000000000000000000000000000`**](https://explorer.metrixcoin.com/contract/0000000000000000000000000000000000000000)
+- **`MainNet`** - [**`be45e56c0a7d19b04f5cebd03ddf82369f72b748`**](https://explorer.metrixcoin.com/contract/be45e56c0a7d19b04f5cebd03ddf82369f72b748)
 
 ### Sourcecode
 
@@ -95,6 +95,7 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20FlashMint.sol";
 import "@metrixnames/mns-contracts/contracts/registry/MNS.sol";
 import "@metrixnames/mns-contracts/contracts/registry/ReverseRegistrar.sol";
+import "./LiquidGovernance.sol";
 
 contract LiquidGovernorMRX is ERC20, ERC20Burnable, Ownable, ERC20FlashMint {
     constructor(address _mns) ERC20("Liquid Governor Metrix", "gMRX") {
@@ -152,7 +153,7 @@ contract LiquidGovernorMRX is ERC20, ERC20Burnable, Ownable, ERC20FlashMint {
         override
         returns (address)
     {
-        return address(owner());
+        return LiquidGovernance(payable(address(owner()))).pool();
     }
 }
 ```

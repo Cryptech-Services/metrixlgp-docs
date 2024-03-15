@@ -71,7 +71,7 @@ $$
 ### Contract Address
 
 - **`TestNet`** - [**`e786c947bdee4d4d30b5720aa1c470582c4b3132`**](https://testnet-explorer.metrixcoin.com/contract/e786c947bdee4d4d30b5720aa1c470582c4b3132)
-- **`MainNet`** - [**`0000000000000000000000000000000000000000`**](https://explorer.metrixcoin.com/contract/0000000000000000000000000000000000000000)
+- **`MainNet`** - [**`a9b1fe0c80d0fd3e71a8fa621e8739f02481f2a9`**](https://explorer.metrixcoin.com/contract/a9b1fe0c80d0fd3e71a8fa621e8739f02481f2a9)
 
 ### Sourcecode
 
